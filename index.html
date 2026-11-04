@@ -19,24 +19,25 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin-bottom: 15px;
+            font-size: 20px;
             color: #e2e8f0;
+            text-align: center;
         }
 
         .main-container {
             display: flex;
             flex-direction: row;
-            gap: 30px;
+            gap: 25px;
             background-color: #0d1117;
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            max-width: 1400px;
+            max-width: 1300px;
             width: 100%;
         }
 
@@ -44,19 +45,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .card-wrapper {
-            width: 500px;
-            height: 500px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border-radius: 6px;
             overflow: hidden;
             background-color: #000;
         }
 
-        /* 1920x1920 scaled down visually */
+        /* 1920x1920 scaled dynamically to fit card-wrapper */
         #photocard {
             width: 1920px;
             height: 1920px;
@@ -64,7 +68,6 @@
             top: 0;
             left: 0;
             transform-origin: top left;
-            transform: scale(0.2604166666666667); /* 500 / 1920 */
             background-color: #0B1224;
             overflow: hidden;
             font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
@@ -229,7 +232,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-width: 600px;
+            width: 100%;
         }
 
         .control-group {
@@ -240,7 +243,7 @@
         }
 
         .control-group h3 {
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 12px;
             color: #58a6ff;
             border-bottom: 1px solid #30363d;
@@ -279,18 +282,20 @@
         }
 
         .slider-row label {
-            width: 140px;
+            width: 130px;
             margin-bottom: 0;
+            font-size: 13px;
         }
 
         input[type="range"] {
             flex: 1;
+            accent-color: #58a6ff;
         }
 
         .value-disp {
-            width: 50px;
+            width: 45px;
             text-align: right;
-            font-size: 13px;
+            font-size: 12px;
             color: #8b949e;
         }
 
@@ -299,10 +304,7 @@
             align-items: center;
             gap: 10px;
             cursor: pointer;
-        }
-
-        .checkbox-row input {
-            cursor: pointer;
+            font-size: 14px;
         }
 
         .btn-download {
@@ -325,7 +327,7 @@
 
         .file-upload-btn {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 10px 16px;
             background-color: #21262d;
             color: #c9d1d9;
             border: 1px solid #30363d;
@@ -333,6 +335,8 @@
             cursor: pointer;
             font-size: 14px;
             margin-bottom: 10px;
+            text-align: center;
+            width: 100%;
         }
 
         .file-upload-btn:hover {
@@ -342,17 +346,34 @@
         input[type="file"] {
             display: none;
         }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
+            }
+
+            .preview-area {
+                max-width: 100%;
+            }
+
+            .slider-row label {
+                width: 110px;
+            }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <h1>নিউজ ফটোকার্ড জেনারেটর (১৯২০×১৯২০ পিক্সেল)</h1>
+    <h1>নিউজ ফটোকার্ড জেনারেটর (১৯২০×১৯২০ px)</h1>
 
     <div class="main-container">
         <!-- Preview Panel -->
         <div class="preview-area">
-            <div class="card-wrapper">
+            <div class="card-wrapper" id="card-wrapper">
                 <div id="photocard">
                     <!-- Feature Image -->
                     <div class="feature-image-container">
@@ -385,7 +406,7 @@
                     </div>
                 </div>
             </div>
-            <p style="margin-top: 10px; font-size: 12px; color: #8b949e;">লাইভ প্রিভিউ (অরিজিনাল সাইজ: 1920x1920px)</p>
+            <p style="margin-top: 8px; font-size: 12px; color: #8b949e; text-align: center;">লাইভ প্রিভিউ (1920x1920px)</p>
         </div>
 
         <!-- Controls Panel -->
@@ -404,12 +425,12 @@
                     <span class="value-disp" id="zoom-val">1x</span>
                 </div>
                 <div class="slider-row">
-                    <label for="img-pan-x">ডানে-বামে (Pan X):</label>
+                    <label for="img-pan-x">ডানে-বামে:</label>
                     <input type="range" id="img-pan-x" min="-500" max="500" step="5" value="0">
                     <span class="value-disp" id="pan-x-val">0px</span>
                 </div>
                 <div class="slider-row">
-                    <label for="img-pan-y">উপরে-নিচে (Pan Y):</label>
+                    <label for="img-pan-y">উপরে-নিচে:</label>
                     <input type="range" id="img-pan-y" min="-500" max="500" step="5" value="0">
                     <span class="value-disp" id="pan-y-val">0px</span>
                 </div>
@@ -427,7 +448,7 @@
                 <textarea id="headline-input" placeholder="সংবাদ শিরোনাম লিখুন...">শিল্পাঞ্চলের পরিস্থিতি স্বাভাবিক রাখতে বিজিবি মোতায়েন</textarea>
                 
                 <div class="slider-row">
-                    <label for="font-size">ফন্ট সাইজ (Font Size):</label>
+                    <label for="font-size">ফন্ট সাইজ:</label>
                     <input type="range" id="font-size" min="40" max="110" value="80">
                     <span class="value-disp" id="font-size-val">80px</span>
                 </div>
@@ -454,6 +475,20 @@
     </div>
 
     <script>
+        const cardWrapper = document.getElementById('card-wrapper');
+        const photocard = document.getElementById('photocard');
+
+        // Dynamic Responsive Scale Setup
+        function updateScale() {
+            const wrapperWidth = cardWrapper.clientWidth;
+            const scale = wrapperWidth / 1920;
+            photocard.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', updateScale);
+        updateScale();
+
+        // Control Elements
         const imgInput = document.getElementById('img-input');
         const featureImg = document.getElementById('feature-img');
         const placeholderText = document.getElementById('placeholder-text');
@@ -501,7 +536,6 @@
         // Auto Date Setup (System Current Date)
         function setAutoDate() {
             const today = new Date();
-            // Local date string format YYYY-MM-DD for datepicker
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
@@ -510,7 +544,6 @@
             cardDate.textContent = formatBanglaDate(today);
         }
 
-        // Run auto date on load
         setAutoDate();
 
         // Manual Date Change Handler
@@ -613,11 +646,10 @@
             downloadBtn.textContent = "প্রসেসিং হচ্ছে...";
             downloadBtn.disabled = true;
 
-            const card = document.getElementById('photocard');
-            const originalTransform = card.style.transform;
-            card.style.transform = 'none';
+            const originalTransform = photocard.style.transform;
+            photocard.style.transform = 'none';
 
-            html2canvas(card, {
+            html2canvas(photocard, {
                 width: 1920,
                 height: 1920,
                 scale: 1,
@@ -625,7 +657,7 @@
                 allowTaint: true,
                 backgroundColor: '#0B1224'
             }).then(canvas => {
-                card.style.transform = originalTransform;
+                photocard.style.transform = originalTransform;
                 const link = document.createElement('a');
                 link.download = `Insight_Edition_${Date.now()}.jpg`;
                 link.href = canvas.toDataURL('image/jpeg', 0.95);
@@ -636,7 +668,7 @@
             }).catch(err => {
                 console.error(err);
                 alert('ছবি তৈরি করতে সমস্যা হয়েছে!');
-                card.style.transform = originalTransform;
+                photocard.style.transform = originalTransform;
                 downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (JPG)";
                 downloadBtn.disabled = false;
             });
