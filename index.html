@@ -1,1 +1,646 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নিউজ ফটোকার্ড জেনারেটর - INSIGHT EDITION</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'SolaimanLipi', 'Kalpurush';
+            background-color: #1a1e29;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #e2e8f0;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            background-color: #0d1117;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .preview-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-wrapper {
+            width: 500px;
+            height: 500px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* 1920x1920 scaled down visually */
+        #photocard {
+            width: 1920px;
+            height: 1920px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: top left;
+            transform: scale(0.2604166666666667); /* 500 / 1920 */
+            background-color: #0B1224;
+            overflow: hidden;
+            font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
+        }
+
+        /* 1. Feature Image */
+        .feature-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            background-color: #1a2236;
+        }
+
+        #feature-img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform-origin: center center;
+        }
+
+        .img-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b949e;
+            font-size: 40px;
+            border: 2px dashed #30363d;
+        }
+
+        /* 2. Date Box */
+        .date-box {
+            position: absolute;
+            top: 88px;
+            left: 1495.857px;
+            width: 426px;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 48px;
+            font-weight: bold;
+            z-index: 10;
+            border-bottom: 4px solid rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(2px);
+            padding-bottom: 4px;
+        }
+
+        /* 3. Branding Label */
+        .branding-label {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #0B1224;
+            color: #ffffff;
+            font-size: 38px;
+            font-weight: 900;
+            padding: 12px 35px;
+            letter-spacing: 2px;
+            z-index: 10;
+            border: 4px solid #ffffff;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 0px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* 4. White Divider Line */
+        .divider-line {
+            position: absolute;
+            top: 1072px;
+            left: 0;
+            width: 1920px;
+            height: 8px;
+            background-color: #ffffff;
+            z-index: 11;
+        }
+
+        /* 5. Headline Container */
+        .headline-container {
+            position: absolute;
+            top: 1100px;
+            left: 0;
+            width: 1920px;
+            height: 590px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 60px;
+            box-sizing: border-box;
+            z-index: 5;
+        }
+
+        .headline-text {
+            color: #ffffff;
+            font-size: 80px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.35;
+            width: 100%;
+            word-wrap: break-word;
+            transition: all 0.2s ease;
+        }
+
+        /* 7. Footer Bar */
+        .footer-bar {
+            position: absolute;
+            top: 1709px;
+            left: 0;
+            width: 1920px;
+            height: 89px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 5;
+            background: linear-gradient(
+                90deg, 
+                rgba(16, 31, 60, 0) 0px, 
+                rgba(16, 31, 60, 1) 300px, 
+                rgba(16, 31, 60, 1) 1620px, 
+                rgba(16, 31, 60, 0) 1920px
+            );
+        }
+
+        .footer-left {
+            margin-left: 400px;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .footer-right {
+            margin-right: 400px;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .fb-icon {
+            width: 32px;
+            height: 32px;
+            fill: #ffffff;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+        }
+
+        .control-group {
+            background-color: #161b22;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+
+        .control-group h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #58a6ff;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 5px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #c9d1d9;
+        }
+
+        input[type="text"], textarea, input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 70px;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .slider-row label {
+            width: 140px;
+            margin-bottom: 0;
+        }
+
+        input[type="range"] {
+            flex: 1;
+        }
+
+        .value-disp {
+            width: 50px;
+            text-align: right;
+            font-size: 13px;
+            color: #8b949e;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-row input {
+            cursor: pointer;
+        }
+
+        .btn-download {
+            background-color: #238636;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-download:hover {
+            background-color: #2ea043;
+        }
+
+        .file-upload-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-btn:hover {
+            background-color: #30363d;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <h1>নিউজ ফটোকার্ড জেনারেটর (১৯২০×১৯২০ পিক্সেল)</h1>
+
+    <div class="main-container">
+        <!-- Preview Panel -->
+        <div class="preview-area">
+            <div class="card-wrapper">
+                <div id="photocard">
+                    <!-- Feature Image -->
+                    <div class="feature-image-container">
+                        <div id="placeholder-text" class="img-placeholder">ছবি সিলেক্ট করুন</div>
+                        <img id="feature-img" src="" alt="Feature Image" style="display: none;">
+                        <!-- Branding Label -->
+                        <div class="branding-label">INSIGHT EDITION</div>
+                    </div>
+
+                    <!-- Date Box -->
+                    <div class="date-box" id="card-date">০৪ নভেম্বর ২০২৬</div>
+
+                    <!-- White Divider Line -->
+                    <div class="divider-line"></div>
+
+                    <!-- Headline Container -->
+                    <div class="headline-container">
+                        <div class="headline-text" id="card-headline">শিল্পাঞ্চলের পরিস্থিতি স্বাভাবিক রাখতে বিজিবি মোতায়েন</div>
+                    </div>
+
+                    <!-- Footer Bar -->
+                    <div class="footer-bar">
+                        <div class="footer-left" id="card-footer-left">বিস্তারিত কমেন্টে...</div>
+                        <div class="footer-right">
+                            <svg class="fb-icon" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            <span id="card-social-handle">/InsightEdition</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 10px; font-size: 12px; color: #8b949e;">লাইভ প্রিভিউ (অরিজিনাল সাইজ: 1920x1920px)</p>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <!-- 1. Feature Image Control -->
+            <div class="control-group">
+                <h3>১. ফিচার ছবি কন্ট্রোল</h3>
+                <label class="file-upload-btn">
+                    ছবি আপলোড করুন
+                    <input type="file" id="img-input" accept="image/*">
+                </label>
+                
+                <div class="slider-row">
+                    <label for="img-zoom">জুম (Zoom):</label>
+                    <input type="range" id="img-zoom" min="1" max="3" step="0.05" value="1">
+                    <span class="value-disp" id="zoom-val">1x</span>
+                </div>
+                <div class="slider-row">
+                    <label for="img-pan-x">ডানে-বামে (Pan X):</label>
+                    <input type="range" id="img-pan-x" min="-500" max="500" step="5" value="0">
+                    <span class="value-disp" id="pan-x-val">0px</span>
+                </div>
+                <div class="slider-row">
+                    <label for="img-pan-y">উপরে-নিচে (Pan Y):</label>
+                    <input type="range" id="img-pan-y" min="-500" max="500" step="5" value="0">
+                    <span class="value-disp" id="pan-y-val">0px</span>
+                </div>
+            </div>
+
+            <!-- 2. Date Control -->
+            <div class="control-group">
+                <h3>২. তারিখ নির্ধারণ</h3>
+                <input type="date" id="date-picker">
+            </div>
+
+            <!-- 3. Headline Control -->
+            <div class="control-group">
+                <h3>৩. সংবাদ শিরোনাম (Headline)</h3>
+                <textarea id="headline-input" placeholder="সংবাদ শিরোনাম লিখুন...">শিল্পাঞ্চলের পরিস্থিতি স্বাভাবিক রাখতে বিজিবি মোতায়েন</textarea>
+                
+                <div class="slider-row">
+                    <label for="font-size">ফন্ট সাইজ (Font Size):</label>
+                    <input type="range" id="font-size" min="40" max="110" value="80">
+                    <span class="value-disp" id="font-size-val">80px</span>
+                </div>
+
+                <div class="slider-row">
+                    <label for="side-margin">দুই পাশ থেকে চাপানো:</label>
+                    <input type="range" id="side-margin" min="0" max="500" value="60" step="10">
+                    <span class="value-disp" id="side-margin-val">60px</span>
+                </div>
+            </div>
+
+            <!-- 4. Footer Settings -->
+            <div class="control-group">
+                <h3>৪. ফুটার সেটিংস</h3>
+                <label class="checkbox-row">
+                    <input type="checkbox" id="toggle-comment" checked>
+                    "বিস্তারিত কমেন্টে..." লেখা প্রদর্শন করুন
+                </label>
+            </div>
+
+            <!-- Download Button -->
+            <button class="btn-download" id="download-btn">ফটোকার্ড ডাউনলোড করুন (JPG)</button>
+        </div>
+    </div>
+
+    <script>
+        const imgInput = document.getElementById('img-input');
+        const featureImg = document.getElementById('feature-img');
+        const placeholderText = document.getElementById('placeholder-text');
+        
+        const imgZoom = document.getElementById('img-zoom');
+        const imgPanX = document.getElementById('img-pan-x');
+        const imgPanY = document.getElementById('img-pan-y');
+        const zoomVal = document.getElementById('zoom-val');
+        const panXVal = document.getElementById('pan-x-val');
+        const panYVal = document.getElementById('pan-y-val');
+
+        const datePicker = document.getElementById('date-picker');
+        const cardDate = document.getElementById('card-date');
+
+        const headlineInput = document.getElementById('headline-input');
+        const cardHeadline = document.getElementById('card-headline');
+        const fontSizeInput = document.getElementById('font-size');
+        const fontSizeVal = document.getElementById('font-size-val');
+        const sideMarginInput = document.getElementById('side-margin');
+        const sideMarginVal = document.getElementById('side-margin-val');
+
+        const toggleComment = document.getElementById('toggle-comment');
+        const cardFooterLeft = document.getElementById('card-footer-left');
+        const downloadBtn = document.getElementById('download-btn');
+
+        // English to Bangla Digit Converter
+        function toBanglaNum(str) {
+            const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return str.replace(/[0-9]/g, digit => banglaDigits[digit]);
+        }
+
+        // Format Date to Bangla
+        function formatBanglaDate(date) {
+            const months = [
+                'জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
+                'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
+            ];
+            const day = toBanglaNum(String(date.getDate()).padStart(2, '0'));
+            const month = months[date.getMonth()];
+            const year = toBanglaNum(String(date.getFullYear()));
+
+            return `${day} ${month} ${year}`;
+        }
+
+        // Auto Date Setup (System Current Date)
+        function setAutoDate() {
+            const today = new Date();
+            // Local date string format YYYY-MM-DD for datepicker
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            
+            datePicker.value = `${year}-${month}-${day}`;
+            cardDate.textContent = formatBanglaDate(today);
+        }
+
+        // Run auto date on load
+        setAutoDate();
+
+        // Manual Date Change Handler
+        datePicker.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const parts = e.target.value.split('-');
+                const selectedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                cardDate.textContent = formatBanglaDate(selectedDate);
+            }
+        });
+
+        // Image Handling
+        imgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    featureImg.src = event.target.result;
+                    featureImg.style.display = 'block';
+                    placeholderText.style.display = 'none';
+                    resetImageControls();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function updateImageTransform() {
+            const scale = imgZoom.value;
+            const x = imgPanX.value;
+            const y = imgPanY.value;
+            featureImg.style.transform = `scale(${scale}) translate(${x}px, ${y}px)`;
+            zoomVal.textContent = `${scale}x`;
+            panXVal.textContent = `${x}px`;
+            panYVal.textContent = `${y}px`;
+        }
+
+        function resetImageControls() {
+            imgZoom.value = 1;
+            imgPanX.value = 0;
+            imgPanY.value = 0;
+            updateImageTransform();
+        }
+
+        imgZoom.addEventListener('input', updateImageTransform);
+        imgPanX.addEventListener('input', updateImageTransform);
+        imgPanY.addEventListener('input', updateImageTransform);
+
+        // Headline Balance Algorithm
+        function formatHeadline() {
+            const text = headlineInput.value.trim();
+            const fontSize = parseInt(fontSizeInput.value, 10);
+            
+            fontSizeVal.textContent = `${fontSize}px`;
+            cardHeadline.style.fontSize = `${fontSize}px`;
+
+            if (!text) {
+                cardHeadline.innerHTML = '';
+                return;
+            }
+
+            const words = text.split(/\s+/);
+
+            if (fontSize > 76 && words.length > 1) {
+                let bestSplit = [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")];
+                let minDiff = Infinity;
+                
+                for (let i = 1; i < words.length; i++) {
+                    let line1 = words.slice(0, i).join(" ");
+                    let line2 = words.slice(i).join(" ");
+                    let diff = Math.abs(line1.length - line2.length);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        bestSplit = [line1, line2];
+                    }
+                }
+                cardHeadline.innerHTML = `${bestSplit[0]}<br>${bestSplit[1]}`;
+            } else {
+                cardHeadline.textContent = text;
+            }
+        }
+
+        sideMarginInput.addEventListener('input', () => {
+            const marginVal = sideMarginInput.value;
+            sideMarginVal.textContent = `${marginVal}px`;
+            const container = document.querySelector('.headline-container');
+            container.style.paddingLeft = `${marginVal}px`;
+            container.style.paddingRight = `${marginVal}px`;
+        });
+
+        headlineInput.addEventListener('input', formatHeadline);
+        fontSizeInput.addEventListener('input', formatHeadline);
+        formatHeadline();
+
+        toggleComment.addEventListener('change', (e) => {
+            cardFooterLeft.style.display = e.target.checked ? 'block' : 'none';
+        });
+
+        // Download JPG
+        downloadBtn.addEventListener('click', () => {
+            downloadBtn.textContent = "প্রসেসিং হচ্ছে...";
+            downloadBtn.disabled = true;
+
+            const card = document.getElementById('photocard');
+            const originalTransform = card.style.transform;
+            card.style.transform = 'none';
+
+            html2canvas(card, {
+                width: 1920,
+                height: 1920,
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#0B1224'
+            }).then(canvas => {
+                card.style.transform = originalTransform;
+                const link = document.createElement('a');
+                link.download = `Insight_Edition_${Date.now()}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
+
+                downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (JPG)";
+                downloadBtn.disabled = false;
+            }).catch(err => {
+                console.error(err);
+                alert('ছবি তৈরি করতে সমস্যা হয়েছে!');
+                card.style.transform = originalTransform;
+                downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (JPG)";
+                downloadBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
