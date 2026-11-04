@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ইনসাইট এডিশন নিউজ ফটোকার্ড - INSIGHT EDITION</title>
+    <title>নিউজ ফটোকার্ড জেনারেটর - INSIGHT EDITION</title>
     <style>
         * {
             box-sizing: border-box;
@@ -60,7 +60,7 @@
             background-color: #000;
         }
 
-        /* 1920x1920 scaled dynamically to fit card-wrapper */
+        /* 1920x1920 scaled dynamically */
         #photocard {
             width: 1920px;
             height: 1920px;
@@ -183,16 +183,13 @@
             transition: all 0.2s ease;
         }
 
-        /* 7. Footer Bar */
+        /* 7. Footer Bar (Absolute Positions for Left and Right Elements) */
         .footer-bar {
             position: absolute;
             top: 1709px;
             left: 0;
             width: 1920px;
             height: 89px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             z-index: 5;
             background: linear-gradient(
                 90deg, 
@@ -204,20 +201,28 @@
         }
 
         .footer-left {
-            margin-left: 400px;
+            position: absolute;
+            left: 400px;
+            top: 50%;
+            transform: translateY(-50%);
             color: #ffffff;
             font-size: 28px;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .footer-right {
-            margin-right: 400px;
+            position: absolute;
+            right: 400px;
+            top: 50%;
+            transform: translateY(-50%);
             color: #ffffff;
             font-size: 28px;
             font-weight: 500;
             display: flex;
             align-items: center;
             gap: 12px;
+            white-space: nowrap;
         }
 
         .fb-icon {
@@ -347,7 +352,6 @@
             display: none;
         }
 
-        /* Responsive Breakpoints */
         @media (max-width: 900px) {
             .main-container {
                 flex-direction: column;
@@ -368,7 +372,7 @@
 </head>
 <body>
 
-    <h1>ইনসাইট এডিশন নিউজ ফটোকার্ড</h1>
+    <h1>নিউজ ফটোকার্ড জেনারেটর (১৯২০×১৯২০ px)</h1>
 
     <div class="main-container">
         <!-- Preview Panel -->
@@ -391,7 +395,7 @@
 
                     <!-- Headline Container -->
                     <div class="headline-container">
-                        <div class="headline-text" id="card-headline"></div>
+                        <div class="headline-text" id="card-headline"> </div>
                     </div>
 
                     <!-- Footer Bar -->
@@ -445,7 +449,7 @@
             <!-- 3. Headline Control -->
             <div class="control-group">
                 <h3>৩. সংবাদ শিরোনাম (Headline)</h3>
-                <textarea id="headline-input" placeholder="ইনসাইট এডিশন এর সংবাদ শিরোনাম লিখুন ..."></textarea>
+                <textarea id="headline-input" placeholder="ইনসাইট এডিশন এর সংবাদ শিরোনাম লিখুন..."></textarea>
                 
                 <div class="slider-row">
                     <label for="font-size">ফন্ট সাইজ:</label>
@@ -478,7 +482,7 @@
         const cardWrapper = document.getElementById('card-wrapper');
         const photocard = document.getElementById('photocard');
 
-        // Dynamic Responsive Scale Setup
+        // Dynamic Scale Update for Responsive Preview
         function updateScale() {
             const wrapperWidth = cardWrapper.clientWidth;
             const scale = wrapperWidth / 1920;
@@ -488,7 +492,7 @@
         window.addEventListener('resize', updateScale);
         updateScale();
 
-        // Control Elements
+        // DOM Elements
         const imgInput = document.getElementById('img-input');
         const featureImg = document.getElementById('feature-img');
         const placeholderText = document.getElementById('placeholder-text');
@@ -514,7 +518,7 @@
         const cardFooterLeft = document.getElementById('card-footer-left');
         const downloadBtn = document.getElementById('download-btn');
 
-        // English to Bangla Digit Converter
+        // Digit Converter
         function toBanglaNum(str) {
             const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
             return str.replace(/[0-9]/g, digit => banglaDigits[digit]);
@@ -533,7 +537,7 @@
             return `${day} ${month} ${year}`;
         }
 
-        // Auto Date Setup (System Current Date)
+        // Set Current System Date Automatically
         function setAutoDate() {
             const today = new Date();
             const year = today.getFullYear();
@@ -546,7 +550,7 @@
 
         setAutoDate();
 
-        // Manual Date Change Handler
+        // Date Change Event
         datePicker.addEventListener('change', (e) => {
             if (e.target.value) {
                 const parts = e.target.value.split('-');
@@ -637,6 +641,7 @@
         fontSizeInput.addEventListener('input', formatHeadline);
         formatHeadline();
 
+        // Footer Comment Display Toggle (Will not affect social link position)
         toggleComment.addEventListener('change', (e) => {
             cardFooterLeft.style.display = e.target.checked ? 'block' : 'none';
         });
