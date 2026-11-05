@@ -160,10 +160,10 @@
         /* 5. Headline Container */
         .headline-container {
             position: absolute;
-            top: 1100px;
+            top: 1165px;
             left: 0;
             width: 1920px;
-            height: 590px;
+            height: 398px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -449,18 +449,19 @@
             <!-- 3. Headline Control -->
             <div class="control-group">
                 <h3>৩. সংবাদ শিরোনাম (Headline)</h3>
-                <textarea id="headline-input" placeholder="ইনসাইট এডিশন এর সংবাদ শিরোনাম লিখুন...">ইনসাইট এডিশন এর সংবাদ শিরোনাম লিখুন</textarea>
-                
+                <label for="headline-input">শিরোনাম / মূল হেডিং (১১৬৫px–১৫৬৩px = ৩৯৮px):</label>
+                <textarea id="headline-input" rows="3" placeholder="সংবাদের শিরোনাম লিখুন...">ইনসাইট এডিশন এর সংবাদ শিরোনাম লিখুন</textarea>
+
                 <div class="slider-row">
-                    <label for="font-size">ফন্ট সাইজ:</label>
-                    <input type="range" id="font-size" min="40" max="150" value="80">
-                    <span class="value-disp" id="font-size-val">80px</span>
+                    <label for="font-size">হেডলাইন ফন্ট সাইজ:</label>
+                    <input type="range" id="font-size" min="40" max="120" value="90">
+                    <span class="value-disp" id="font-size-val">90px</span>
                 </div>
 
                 <div class="slider-row">
-                    <label for="side-margin">দুই পাশ থেকে চাপানো:</label>
-                    <input type="range" id="side-margin" min="0" max="500" value="60" step="10">
-                    <span class="value-disp" id="side-margin-val">60px</span>
+                    <label for="side-margin">ডানে-বামে মার্জিন (অটো ১/২/৩ লাইন):</label>
+                    <input type="range" id="side-margin" min="40" max="450" value="250">
+                    <span class="value-disp" id="side-margin-val">250px</span>
                 </div>
             </div>
 
@@ -595,50 +596,82 @@
         imgPanX.addEventListener('input', updateImageTransform);
         imgPanY.addEventListener('input', updateImageTransform);
 
-        // Headline Balance Algorithm
-        function formatHeadline() {
-            const text = headlineInput.value.trim();
-            const fontSize = parseInt(fontSizeInput.value, 10);
-            
-            fontSizeVal.textContent = `${fontSize}px`;
-            cardHeadline.style.fontSize = `${fontSize}px`;
+        // Automatically balance the headline into 1, 2 or 3 lines.
+        function splitHeadlineIntoLines(text, maxWidth, fontSize) {
+            const words = text.trim().split(/\s+/).filter(Boolean);
+            if (!words.length) return [];
 
-            if (!text) {
-                cardHeadline.innerHTML = '';
-                return;
-            }
+            const measureCanvas = document.createElement('canvas');
+            const ctx = measureCanvas.getContext('2d');
+            ctx.font = `bold ${fontSize}px 'SolaimanLipi', 'Kalpurush', sans-serif`;
+            const widthOf = value => ctx.measureText(value).width;
+            const maxLines = Math.min(3, words.length);
 
-            const words = text.split(/\s+/);
+            for (let lineCount = 1; lineCount <= maxLines; lineCount++) {
+                let bestLines = null;
+                let bestScore = Infinity;
 
-            if (fontSize > 76 && words.length > 1) {
-                let bestSplit = [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")];
-                let minDiff = Infinity;
-                
-                for (let i = 1; i < words.length; i++) {
-                    let line1 = words.slice(0, i).join(" ");
-                    let line2 = words.slice(i).join(" ");
-                    let diff = Math.abs(line1.length - line2.length);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        bestSplit = [line1, line2];
+                function findPartitions(start, current) {
+                    if (current.length === lineCount - 1) {
+                        const lastLine = words.slice(start).join(' ');
+                        if (!lastLine) return;
+                        const lastWidth = widthOf(lastLine);
+                        if (lastWidth > maxWidth) return;
+
+                        const widths = [...current.map(widthOf), lastWidth];
+                        const score = Math.max(...widths) - Math.min(...widths);
+                        if (score < bestScore) {
+                            bestScore = score;
+                            bestLines = [...current, lastLine];
+                        }
+                        return;
+                    }
+
+                    const remainingLines = lineCount - current.length - 1;
+                    const lastEnd = words.length - remainingLines;
+                    for (let end = start + 1; end <= lastEnd; end++) {
+                        const candidate = words.slice(start, end).join(' ');
+                        if (widthOf(candidate) > maxWidth) break;
+                        findPartitions(end, [...current, candidate]);
                     }
                 }
-                cardHeadline.innerHTML = `${bestSplit[0]}<br>${bestSplit[1]}`;
-            } else {
-                cardHeadline.textContent = text;
+
+                findPartitions(0, []);
+                if (bestLines) return bestLines;
             }
+
+            // A single unusually long word may need normal browser wrapping.
+            return [text.trim()];
         }
 
-        sideMarginInput.addEventListener('input', () => {
-            const marginVal = sideMarginInput.value;
-            sideMarginVal.textContent = `${marginVal}px`;
+        function formatHeadline() {
+            const text = headlineInput.value.trim();
+            const fontSize = Number(fontSizeInput.value);
+            const margin = Number(sideMarginInput.value);
+
+            fontSizeVal.textContent = `${fontSize}px`;
+            sideMarginVal.textContent = `${margin}px`;
+            cardHeadline.style.fontSize = `${fontSize}px`;
+            cardHeadline.style.lineHeight = '1.25';
+
             const container = document.querySelector('.headline-container');
-            container.style.paddingLeft = `${marginVal}px`;
-            container.style.paddingRight = `${marginVal}px`;
-        });
+            container.style.paddingLeft = `${margin}px`;
+            container.style.paddingRight = `${margin}px`;
+
+            cardHeadline.replaceChildren();
+            if (!text) return;
+
+            const availableWidth = 1920 - (margin * 2);
+            const lines = splitHeadlineIntoLines(text, availableWidth, fontSize);
+            lines.forEach((line, index) => {
+                if (index) cardHeadline.appendChild(document.createElement('br'));
+                cardHeadline.appendChild(document.createTextNode(line));
+            });
+        }
 
         headlineInput.addEventListener('input', formatHeadline);
         fontSizeInput.addEventListener('input', formatHeadline);
+        sideMarginInput.addEventListener('input', formatHeadline);
         formatHeadline();
 
         // Footer Comment Display Toggle (Will not affect social link position)
