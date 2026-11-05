@@ -183,7 +183,7 @@
             transition: all 0.2s ease;
         }
 
-        /* 7. Footer Bar (Absolute Positions for Left and Right Elements) */
+        /* 7. Footer Bar */
         .footer-bar {
             position: absolute;
             top: 1709px;
@@ -287,7 +287,7 @@
         }
 
         .slider-row label {
-            width: 130px;
+            width: 110px;
             margin-bottom: 0;
             font-size: 13px;
         }
@@ -302,6 +302,24 @@
             text-align: right;
             font-size: 12px;
             color: #8b949e;
+        }
+
+        /* Reset Button Style */
+        .btn-reset {
+            background-color: #21262d;
+            color: #f85149;
+            border: 1px solid #30363d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-reset:hover {
+            background-color: #30363d;
+            border-color: #f85149;
         }
 
         .checkbox-row {
@@ -364,7 +382,7 @@
             }
 
             .slider-row label {
-                width: 110px;
+                width: 100px;
             }
         }
     </style>
@@ -427,16 +445,19 @@
                     <label for="img-zoom">জুম (Zoom):</label>
                     <input type="range" id="img-zoom" min="1" max="3" step="0.05" value="1">
                     <span class="value-disp" id="zoom-val">1x</span>
+                    <button class="btn-reset" id="reset-zoom">রিসেট</button>
                 </div>
                 <div class="slider-row">
                     <label for="img-pan-x">ডানে-বামে:</label>
                     <input type="range" id="img-pan-x" min="-500" max="500" step="5" value="0">
                     <span class="value-disp" id="pan-x-val">0px</span>
+                    <button class="btn-reset" id="reset-pan-x">রিসেট</button>
                 </div>
                 <div class="slider-row">
                     <label for="img-pan-y">উপরে-নিচে:</label>
                     <input type="range" id="img-pan-y" min="-500" max="500" step="5" value="0">
                     <span class="value-disp" id="pan-y-val">0px</span>
+                    <button class="btn-reset" id="reset-pan-y">রিসেট</button>
                 </div>
             </div>
 
@@ -449,7 +470,7 @@
             <!-- 3. Headline Control -->
             <div class="control-group">
                 <h3>৩. সংবাদ শিরোনাম (Headline)</h3>
-                <label for="headline-input">শিরোনাম / মূল হেডিং:</label>
+                <label for="headline-input">শিরোনাম / মূল হেডিং (১১৬৫px–১৫৬৩px = ৩৯৮px):</label>
                 <textarea id="headline-input" rows="3" placeholder="সংবাদের শিরোনাম লিখুন...">ইনসাইট এডিশন এর সংবাদ শিরোনাম লিখুন</textarea>
 
                 <div class="slider-row">
@@ -504,6 +525,11 @@
         const zoomVal = document.getElementById('zoom-val');
         const panXVal = document.getElementById('pan-x-val');
         const panYVal = document.getElementById('pan-y-val');
+
+        // Reset Buttons
+        const resetZoomBtn = document.getElementById('reset-zoom');
+        const resetPanXBtn = document.getElementById('reset-pan-x');
+        const resetPanYBtn = document.getElementById('reset-pan-y');
 
         const datePicker = document.getElementById('date-picker');
         const cardDate = document.getElementById('card-date');
@@ -596,6 +622,22 @@
         imgPanX.addEventListener('input', updateImageTransform);
         imgPanY.addEventListener('input', updateImageTransform);
 
+        // Individual Reset Button Event Listeners
+        resetZoomBtn.addEventListener('click', () => {
+            imgZoom.value = 1;
+            updateImageTransform();
+        });
+
+        resetPanXBtn.addEventListener('click', () => {
+            imgPanX.value = 0;
+            updateImageTransform();
+        });
+
+        resetPanYBtn.addEventListener('click', () => {
+            imgPanY.value = 0;
+            updateImageTransform();
+        });
+
         // Automatically balance the headline into 1, 2 or 3 lines.
         function splitHeadlineIntoLines(text, maxWidth, fontSize) {
             const words = text.trim().split(/\s+/).filter(Boolean);
@@ -640,7 +682,6 @@
                 if (bestLines) return bestLines;
             }
 
-            // A single unusually long word may need normal browser wrapping.
             return [text.trim()];
         }
 
@@ -674,7 +715,7 @@
         sideMarginInput.addEventListener('input', formatHeadline);
         formatHeadline();
 
-        // Footer Comment Display Toggle (Will not affect social link position)
+        // Footer Comment Display Toggle
         toggleComment.addEventListener('change', (e) => {
             cardFooterLeft.style.display = e.target.checked ? 'block' : 'none';
         });
