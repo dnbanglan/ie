@@ -387,6 +387,20 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+.today-date-btn {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #1f5eff;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.today-date-btn:hover { filter: brightness(.94); }
+</style>
 </head>
 <body>
 
@@ -465,6 +479,7 @@
             <div class="control-group">
                 <h3>২. তারিখ নির্ধারণ</h3>
                 <input type="date" id="date-picker">
+<button type="button" id="today-date-btn" class="today-date-btn">আজকের তারিখে ফিরুন</button>
             </div>
 
             <!-- 3. Headline Control -->
@@ -753,5 +768,26 @@
             });
         });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const todayButton = document.getElementById('today-date-btn');
+  const datePicker = document.getElementById('date-picker');
+  if (!todayButton || !datePicker) return;
+  todayButton.addEventListener('click', function () {
+    if (typeof setAutoDate === 'function') {
+      setAutoDate();
+      datePicker.dispatchEvent(new Event('change', { bubbles: true }));
+    } else {
+      const now = new Date();
+      const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString().slice(0, 10);
+      datePicker.value = localDate;
+      datePicker.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+});
+</script>
+
 </body>
 </html>
