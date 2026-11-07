@@ -71,9 +71,10 @@
             background-color: #0B1224;
             overflow: hidden;
             font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
+            transition: height 0.2s ease;
         }
 
-        /* 1. Feature Image */
+        /* 1. Feature Image (1920*1080 px) */
         .feature-image-container {
             position: absolute;
             top: 0;
@@ -81,7 +82,7 @@
             width: 1920px;
             height: 1080px;
             overflow: hidden;
-            background-color: #1a2236;
+            background-color: #0B1224;
         }
 
         #feature-img {
@@ -138,9 +139,7 @@
             z-index: 10;
             border: 4px solid #ffffff;
             border-top-left-radius: 20px;
-            border-top-right-radius: 0px;
             border-bottom-right-radius: 20px;
-            border-bottom-left-radius: 0px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             text-transform: uppercase;
             white-space: nowrap;
@@ -157,13 +156,13 @@
             z-index: 11;
         }
 
-        /* 5. Headline Container */
+        /* 5. Headline Container (1100px to 1535px, height 435px) */
         .headline-container {
             position: absolute;
-            top: 1165px;
+            top: 1100px;
             left: 0;
             width: 1920px;
-            height: 398px;
+            height: 435px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -183,10 +182,10 @@
             transition: all 0.2s ease;
         }
 
-        /* 7. Footer Bar */
+        /* 7. Footer Bar (1542px to 1631px, height 89px) with 101F3C & Fade Opacity */
         .footer-bar {
             position: absolute;
-            top: 1709px;
+            top: 1542px;
             left: 0;
             width: 1920px;
             height: 89px;
@@ -231,13 +230,35 @@
             fill: #ffffff;
         }
 
-        /* Controls Panel */
+        /* 8. Ad Banner Section (1638px to 1920px, height 282px) */
+        .ad-container {
+            position: absolute;
+            top: 1638px;
+            left: 0;
+            width: 1920px;
+            height: 282px;
+            z-index: 5;
+            overflow: hidden;
+            background-color: #0b1224;
+            display: block;
+        }
+
+        .ad-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Controls Panel Styles */
         .controls-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 15px;
             width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
         .control-group {
@@ -262,7 +283,7 @@
             color: #c9d1d9;
         }
 
-        input[type="text"], textarea, input[type="date"] {
+        input[type="text"], textarea, input[type="date"], select {
             width: 100%;
             padding: 10px;
             background-color: #0d1117;
@@ -287,7 +308,7 @@
         }
 
         .slider-row label {
-            width: 110px;
+            width: 130px;
             margin-bottom: 0;
             font-size: 13px;
         }
@@ -304,22 +325,22 @@
             color: #8b949e;
         }
 
-        /* Reset Button Style */
-        .btn-reset {
+        .btn-reset, .btn-action {
             background-color: #21262d;
-            color: #f85149;
+            color: #58a6ff;
             border: 1px solid #30363d;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
-            white-space: nowrap;
+            width: 100%;
+            margin-bottom: 8px;
         }
 
-        .btn-reset:hover {
+        .btn-reset:hover, .btn-action:hover {
             background-color: #30363d;
-            border-color: #f85149;
+            border-color: #58a6ff;
         }
 
         .checkbox-row {
@@ -328,6 +349,7 @@
             gap: 10px;
             cursor: pointer;
             font-size: 14px;
+            margin-bottom: 8px;
         }
 
         .btn-download {
@@ -370,41 +392,35 @@
             display: none;
         }
 
+        .today-date-btn {
+            width: 100%;
+            margin-top: 4px;
+            padding: 8px 12px;
+            border: 0;
+            border-radius: 6px;
+            background: #1f5eff;
+            color: #fff;
+            font: inherit;
+            cursor: pointer;
+        }
+        .today-date-btn:hover { filter: brightness(.94); }
+
         @media (max-width: 900px) {
             .main-container {
                 flex-direction: column;
                 align-items: center;
                 padding: 15px;
             }
-
             .preview-area {
                 max-width: 100%;
-            }
-
-            .slider-row label {
-                width: 100px;
             }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<style>
-.today-date-btn {
-  margin-top: 8px;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 6px;
-  background: #1f5eff;
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
-}
-.today-date-btn:hover { filter: brightness(.94); }
-</style>
 </head>
 <body>
 
-    <h1>ইনসাইট এডিশন ফটোকার্ড</h1>
+    <h1>ইনসাইট এডিশন ফটোকার্ড মেকার</h1>
 
     <div class="main-container">
         <!-- Preview Panel -->
@@ -420,7 +436,7 @@
                     </div>
 
                     <!-- Date Box -->
-                    <div class="date-box" id="card-date">০৪ নভেম্বর ২০২৬</div>
+                    <div class="date-box" id="card-date">০৮ নভেম্বর ২০২৬</div>
 
                     <!-- White Divider Line -->
                     <div class="divider-line"></div>
@@ -440,9 +456,14 @@
                             <span id="card-social-handle">/InsightEdition</span>
                         </div>
                     </div>
+
+                    <!-- Ad Banner Section -->
+                    <div class="ad-container" id="ad-container-box">
+                        <img id="ad-img-element" src="https://www.dnbangla.com.bd/wp-content/uploads/2026/03/ads-ncem.jpg" crossorigin="anonymous" alt="Advertisement">
+                    </div>
                 </div>
             </div>
-            <p style="margin-top: 8px; font-size: 12px; color: #8b949e; text-align: center;">লাইভ প্রিভিউ</p>
+            <p style="margin-top: 8px; font-size: 12px; color: #8b949e; text-align: center;">প্রিভিউ ও ডাউনলোডের সঠিক সাইজ সামঞ্জস্যপূর্ণ</p>
         </div>
 
         <!-- Controls Panel -->
@@ -459,19 +480,19 @@
                     <label for="img-zoom">জুম (Zoom):</label>
                     <input type="range" id="img-zoom" min="1" max="3" step="0.05" value="1">
                     <span class="value-disp" id="zoom-val">1x</span>
-                    <button class="btn-reset" id="reset-zoom">রিসেট</button>
+                    <button class="btn-reset" id="reset-zoom" style="width: auto; padding: 4px 8px; margin-bottom: 0;">রিসেট</button>
                 </div>
                 <div class="slider-row">
                     <label for="img-pan-x">ডানে-বামে:</label>
                     <input type="range" id="img-pan-x" min="-500" max="500" step="5" value="0">
                     <span class="value-disp" id="pan-x-val">0px</span>
-                    <button class="btn-reset" id="reset-pan-x">রিসেট</button>
+                    <button class="btn-reset" id="reset-pan-x" style="width: auto; padding: 4px 8px; margin-bottom: 0;">রিসেট</button>
                 </div>
                 <div class="slider-row">
                     <label for="img-pan-y">উপরে-নিচে:</label>
                     <input type="range" id="img-pan-y" min="-500" max="500" step="5" value="0">
                     <span class="value-disp" id="pan-y-val">0px</span>
-                    <button class="btn-reset" id="reset-pan-y">রিসেট</button>
+                    <button class="btn-reset" id="reset-pan-y" style="width: auto; padding: 4px 8px; margin-bottom: 0;">রিসেট</button>
                 </div>
             </div>
 
@@ -479,7 +500,7 @@
             <div class="control-group">
                 <h3>২. তারিখ নির্ধারণ</h3>
                 <input type="date" id="date-picker">
-<button type="button" id="today-date-btn" class="today-date-btn">আজকের তারিখে ফিরুন</button>
+                <button type="button" id="today-date-btn" class="today-date-btn">আজকের তারিখে ফিরুন</button>
             </div>
 
             <!-- 3. Headline Control -->
@@ -490,24 +511,43 @@
 
                 <div class="slider-row">
                     <label for="font-size">হেডলাইন ফন্ট সাইজ:</label>
-                    <input type="range" id="font-size" min="40" max="120" value="90">
-                    <span class="value-disp" id="font-size-val">90px</span>
+                    <input type="range" id="font-size" min="40" max="110" value="75">
+                    <span class="value-disp" id="font-size-val">75px</span>
                 </div>
 
                 <div class="slider-row">
-                    <label for="side-margin">অটো মার্জিন:</label>
-                    <input type="range" id="side-margin" min="40" max="450" value="250">
-                    <span class="value-disp" id="side-margin-val">250px</span>
+                    <label for="side-margin">ডান-বাম মার্জিন:</label>
+                    <input type="range" id="side-margin" min="40" max="450" value="100">
+                    <span class="value-disp" id="side-margin-val">100px</span>
                 </div>
             </div>
 
-            <!-- 4. Footer Settings -->
+            <!-- 4. Footer & Ad Settings -->
             <div class="control-group">
-                <h3>৪. ফুটার সেটিংস</h3>
+                <h3>৪. ফুটার ও বিজ্ঞাপন সেটিংস</h3>
                 <label class="checkbox-row">
                     <input type="checkbox" id="toggle-comment" checked>
                     "বিস্তারিত কমেন্টে..." লেখা প্রদর্শন করুন
                 </label>
+
+                <label class="checkbox-row" style="margin-top: 10px;">
+                    <input type="checkbox" id="toggle-ad" checked>
+                    বিজ্ঞাপন ব্যানার প্রদর্শন করুন (অন/অফ)
+                </label>
+
+                <div style="margin-top: 10px;">
+                    <label for="post-sequence-select">বিজ্ঞাপন সাইকেল নম্বর (বিজ্ঞাপন অটো পরিবর্তনের জন্য):</label>
+                    <select id="post-sequence-select">
+                        <option value="1">১ম বিজ্ঞাপন (NCEM)</option>
+                        <option value="2">২য় বিজ্ঞাপন (Mukti Clinic)</option>
+                        <option value="3">৩য় বিজ্ঞাপন (Rupon)</option>
+                        <option value="4">৪র্থ বিজ্ঞাপন (Monir Dental)</option>
+                        <option value="5">৫ম বিজ্ঞাপন (NCTTA)</option>
+                        <option value="6">৬ষ্ঠ বিজ্ঞাপন (NCEM - Cycle)</option>
+                    </select>
+                </div>
+
+                <button type="button" id="next-ad-btn" class="btn-action">ম্যানুয়াল বিজ্ঞাপন ব্যানার পরিবর্তন করুন</button>
             </div>
 
             <!-- Download Button -->
@@ -541,7 +581,6 @@
         const panXVal = document.getElementById('pan-x-val');
         const panYVal = document.getElementById('pan-y-val');
 
-        // Reset Buttons
         const resetZoomBtn = document.getElementById('reset-zoom');
         const resetPanXBtn = document.getElementById('reset-pan-x');
         const resetPanYBtn = document.getElementById('reset-pan-y');
@@ -558,7 +597,51 @@
 
         const toggleComment = document.getElementById('toggle-comment');
         const cardFooterLeft = document.getElementById('card-footer-left');
+        
+        const toggleAd = document.getElementById('toggle-ad');
+        const adContainerBox = document.getElementById('ad-container-box');
+        const adImgElement = document.getElementById('ad-img-element');
+        const postSequenceSelect = document.getElementById('post-sequence-select');
+        const nextAdBtn = document.getElementById('next-ad-btn');
         const downloadBtn = document.getElementById('download-btn');
+
+        // Ad Banners Database (Cycle: 1 to 5)
+        const adBanners = {
+            1: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/ads-ncem.jpg",
+            2: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/mukti-clinic.jpg",
+            3: "https://www.dnbangla.com.bd/wp-content/uploads/2026/10/ads-khadija-humayra-rupon.jpg",
+            4: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/Monir-Dental.jpg",
+            5: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/NCTTA-Academy.jpg"
+        };
+
+        function setAdByIndex(index) {
+            const actualIndex = ((index - 1) % 5) + 1;
+            adImgElement.src = adBanners[actualIndex];
+            postSequenceSelect.value = index;
+        }
+
+        // Update Ad Banner based on dropdown selection
+        postSequenceSelect.addEventListener('change', (e) => {
+            setAdByIndex(parseInt(e.target.value));
+        });
+
+        // Manual Button to cycle next ad
+        nextAdBtn.addEventListener('click', () => {
+            let currentVal = parseInt(postSequenceSelect.value);
+            let nextVal = currentVal >= 6 ? 1 : currentVal + 1;
+            setAdByIndex(nextVal);
+        });
+
+        // Toggle Ad Banner & Resize PhotoCard Height (1920*1920 vs 1920*1638)
+        toggleAd.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                photocard.style.height = "1920px";
+                adContainerBox.style.display = "block";
+            } else {
+                photocard.style.height = "1638px";
+                adContainerBox.style.display = "none";
+            }
+        });
 
         // Digit Converter
         function toBanglaNum(str) {
@@ -592,7 +675,10 @@
 
         setAutoDate();
 
-        // Date Change Event
+        document.getElementById('today-date-btn').addEventListener('click', () => {
+            setAutoDate();
+        });
+
         datePicker.addEventListener('change', (e) => {
             if (e.target.value) {
                 const parts = e.target.value.split('-');
@@ -637,23 +723,11 @@
         imgPanX.addEventListener('input', updateImageTransform);
         imgPanY.addEventListener('input', updateImageTransform);
 
-        // Individual Reset Button Event Listeners
-        resetZoomBtn.addEventListener('click', () => {
-            imgZoom.value = 1;
-            updateImageTransform();
-        });
+        resetZoomBtn.addEventListener('click', () => { imgZoom.value = 1; updateImageTransform(); });
+        resetPanXBtn.addEventListener('click', () => { imgPanX.value = 0; updateImageTransform(); });
+        resetPanYBtn.addEventListener('click', () => { imgPanY.value = 0; updateImageTransform(); });
 
-        resetPanXBtn.addEventListener('click', () => {
-            imgPanX.value = 0;
-            updateImageTransform();
-        });
-
-        resetPanYBtn.addEventListener('click', () => {
-            imgPanY.value = 0;
-            updateImageTransform();
-        });
-
-        // Automatically balance the headline into 1, 2 or 3 lines.
+        // Headline auto balance & alignment formatting
         function splitHeadlineIntoLines(text, maxWidth, fontSize) {
             const words = text.trim().split(/\s+/).filter(Boolean);
             if (!words.length) return [];
@@ -708,7 +782,7 @@
             fontSizeVal.textContent = `${fontSize}px`;
             sideMarginVal.textContent = `${margin}px`;
             cardHeadline.style.fontSize = `${fontSize}px`;
-            cardHeadline.style.lineHeight = '1.25';
+            cardHeadline.style.lineHeight = '1.3';
 
             const container = document.querySelector('.headline-container');
             container.style.paddingLeft = `${margin}px`;
@@ -730,22 +804,25 @@
         sideMarginInput.addEventListener('input', formatHeadline);
         formatHeadline();
 
-        // Footer Comment Display Toggle
+        // Footer Comment Toggle
         toggleComment.addEventListener('change', (e) => {
             cardFooterLeft.style.display = e.target.checked ? 'block' : 'none';
         });
 
-        // Download JPG
+        // Download JPG (Matches preview and rendering exactly based on ad active state)
         downloadBtn.addEventListener('click', () => {
             downloadBtn.textContent = "প্রসেসিং হচ্ছে...";
             downloadBtn.disabled = true;
+
+            const isAdActive = toggleAd.checked;
+            const targetHeight = isAdActive ? 1920 : 1638;
 
             const originalTransform = photocard.style.transform;
             photocard.style.transform = 'none';
 
             html2canvas(photocard, {
                 width: 1920,
-                height: 1920,
+                height: targetHeight,
                 scale: 1,
                 useCORS: true,
                 allowTaint: true,
@@ -768,26 +845,5 @@
             });
         });
     </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const todayButton = document.getElementById('today-date-btn');
-  const datePicker = document.getElementById('date-picker');
-  if (!todayButton || !datePicker) return;
-  todayButton.addEventListener('click', function () {
-    if (typeof setAutoDate === 'function') {
-      setAutoDate();
-      datePicker.dispatchEvent(new Event('change', { bubbles: true }));
-    } else {
-      const now = new Date();
-      const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-        .toISOString().slice(0, 10);
-      datePicker.value = localDate;
-      datePicker.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-  });
-});
-</script>
-
 </body>
 </html>
