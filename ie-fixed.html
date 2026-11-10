@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ইনসাইট এডিশন ফটোকার্ড জেনারেটর - INSIGHT EDITION</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'SolaimanLipi', 'Kalpurush';
+            background: #1a1e29; color: #fff; display: flex; flex-direction: column;
+            align-items: center; min-height: 100vh; padding: 20px;
+        }
+        h1 { margin-bottom: 20px; font-size: 22px; color: #e2e8f0; text-align: center; }
+        .main-container {
+            display: flex; flex-direction: row; gap: 25px; background: #0d1117;
+            padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.5);
+            max-width: 1400px; width: 100%;
+        }
+        .preview-area { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 550px; margin: 0 auto; }
+        .card-wrapper {
+            width: 100%; aspect-ratio: 1 / 1; position: relative; overflow: hidden;
+            border-radius: 6px; background: #0b1224; box-shadow: 0 4px 20px rgba(0,0,0,.7);
+        }
+        #photocard {
+            width: 1920px; height: 1920px; position: absolute; top: 0; left: 0;
+            transform-origin: top left; background: #0b1224; overflow: hidden;
+            font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
+        }
+        .feature-image-container { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; overflow: hidden; background: #1a2236; }
+        #feature-img { position: absolute; width: 100%; height: 100%; object-fit: cover; transform-origin: center center; }
+        .img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #8b949e; font-size: 45px; border: 2px dashed #30363d; }
+        .date-box {
+            position: absolute; top: 88px; left: 1495.857px; width: 426px; height: 76px;
+            display: flex; align-items: center; justify-content: center; color: #fff; font-size: 38px;
+            font-weight: bold; z-index: 10; background: rgba(11,18,36,.3);
+        }
+        .branding-container { position: absolute; top: 939px; left: 0; width: 1920px; height: 131px; display: flex; align-items: center; justify-content: center; z-index: 12; pointer-events: none; }
+        .branding-label {
+            background: #0b1224; color: #fff; font-size: 52px; font-weight: 900; padding: 10px 50px;
+            letter-spacing: 2px; border: 4px solid #fff; border-radius: 35px 0 35px 0;
+            white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,.4);
+        }
+        .divider-line { position: absolute; top: 1072px; left: 0; width: 1920px; height: 8px; background: #fff; z-index: 11; }
+        .headline-container {
+            position: absolute; top: 1153px; left: 0; width: 1920px; height: 335px;
+            display: flex; align-items: center; justify-content: center; padding: 0 100px;
+            z-index: 5; overflow: hidden;
+        }
+        .headline-text { color: #fff; font-size: 72px; font-weight: bold; text-align: center; line-height: 1.3; width: 100%; overflow-wrap: anywhere; }
+        .footer-bar {
+            position: absolute; top: 1542px; left: 0; width: 1920px; height: 89px; z-index: 5;
+            background: linear-gradient(90deg, rgba(16,31,60,0) 0, #101f3c 300px, #101f3c 1620px, rgba(16,31,60,0) 1920px);
+        }
+        .footer-left { position: absolute; left: 400px; top: 50%; transform: translateY(-50%); color: #fff; font-size: 30px; white-space: nowrap; }
+        .footer-right { position: absolute; right: 400px; top: 50%; transform: translateY(-50%); color: #fff; font-size: 30px; display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+        .fb-icon { width: 36px; height: 36px; fill: #fff; }
+        .bottom-bg-spacer { position: absolute; top: 1631px; left: 0; width: 1920px; height: 11px; background: #0b1224; z-index: 4; }
+        .ad-banner-container { position: absolute; top: 1642px; left: 0; width: 1920px; height: 278px; overflow: hidden; background: #000; z-index: 10; }
+        #ad-banner-img { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+        .controls-panel { flex: 1; display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .control-group { background: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d; }
+        .control-group h3 { font-size: 15px; margin-bottom: 12px; color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        label { display: block; font-size: 14px; margin-bottom: 6px; color: #c9d1d9; }
+        input[type="text"], select, textarea, input[type="date"] {
+            width: 100%; padding: 10px; background: #0d1117; border: 1px solid #30363d;
+            border-radius: 6px; color: #fff; font-size: 14px; margin-bottom: 10px; font-family: inherit;
+        }
+        textarea { resize: vertical; height: 75px; }
+        .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .slider-row label { width: 120px; flex: 0 0 120px; margin-bottom: 0; font-size: 13px; }
+        input[type="range"] { flex: 1; accent-color: #58a6ff; }
+        .value-disp { width: 50px; text-align: right; font-size: 12px; color: #8b949e; }
+        .btn-reset, .btn-action { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+        .btn-reset:hover, .btn-action:hover { background: #30363d; border-color: #8b949e; }
+        .btn-reset-danger { color: #f85149; }
+        .checkbox-row { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; user-select: none; margin-bottom: 10px; }
+        .btn-download { background: #238636; color: #fff; border: 0; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
+        .btn-download:hover { background: #2ea043; }
+        .btn-download:disabled { opacity: .7; cursor: wait; }
+        .file-upload-btn { display: inline-block; padding: 10px 16px; background: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; cursor: pointer; font-size: 14px; margin-bottom: 10px; text-align: center; width: 100%; }
+        input[type="file"] { display: none; }
+        #preview-size-info { margin-top: 10px; font-size: 13px; color: #8b949e; text-align: center; }
+        @media (max-width: 900px) { .main-container { flex-direction: column; align-items: center; padding: 15px; } .preview-area { max-width: 100%; } }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <h1>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</h1>
+    <div class="main-container">
+        <div class="preview-area">
+            <div class="card-wrapper" id="card-wrapper">
+                <div id="photocard">
+                    <div class="feature-image-container">
+                        <div id="placeholder-text" class="img-placeholder">ফিচার ছবি আপলোড করুন</div>
+                        <img id="feature-img" alt="Feature Image" style="display:none">
+                    </div>
+                    <div class="date-box" id="card-date">০৪ নভেম্বর ২০২৬</div>
+                    <div class="branding-container"><div class="branding-label">INSIGHT EDITION</div></div>
+                    <div class="divider-line"></div>
+                    <div class="headline-container" id="headline-container"><div class="headline-text" id="card-headline">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</div></div>
+                    <div class="footer-bar">
+                        <div class="footer-left" id="card-footer-left">বিস্তারিত কমেন্টে</div>
+                        <div class="footer-right">
+                            <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            <span>/InsightEdition</span>
+                        </div>
+                    </div>
+                    <div class="bottom-bg-spacer"></div>
+                    <div class="ad-banner-container" id="ad-banner-container">
+                        <!-- Set crossorigin before JavaScript assigns the image src. -->
+                        <img id="ad-banner-img" alt="Ad Banner" crossorigin="anonymous">
+                    </div>
+                </div>
+            </div>
+            <p id="preview-size-info">লাইভ প্রিভিউ (১৯২০ x ১৯২০ px)</p>
+        </div>
+
+        <div class="controls-panel">
+            <div class="control-group">
+                <h3>১. ফিচার ছবি আপলোড ও পজিশনিং</h3>
+                <label class="file-upload-btn">ছবি আপলোড করুন<input type="file" id="img-input" accept="image/*"></label>
+                <div class="slider-row"><label for="img-zoom">জুম:</label><input type="range" id="img-zoom" min="1" max="3" step="0.05" value="1"><span class="value-disp" id="zoom-val">1x</span><button class="btn-reset btn-reset-danger" id="reset-zoom" type="button">রিসেট</button></div>
+                <div class="slider-row"><label for="img-pan-x">ডানে-বামে:</label><input type="range" id="img-pan-x" min="-600" max="600" step="5" value="0"><span class="value-disp" id="pan-x-val">0px</span><button class="btn-reset btn-reset-danger" id="reset-pan-x" type="button">রিসেট</button></div>
+                <div class="slider-row"><label for="img-pan-y">উপরে-নিচে:</label><input type="range" id="img-pan-y" min="-600" max="600" step="5" value="0"><span class="value-disp" id="pan-y-val">0px</span><button class="btn-reset btn-reset-danger" id="reset-pan-y" type="button">রিসেট</button></div>
+            </div>
+            <div class="control-group">
+                <h3>২. তারিখ নির্ধারণ</h3>
+                <div style="display:flex;gap:10px;align-items:center"><input type="date" id="date-picker" style="margin-bottom:0"><button type="button" id="today-date-btn" class="btn-action">আজকের তারিখ</button></div>
+            </div>
+            <div class="control-group">
+                <h3>৩. সংবাদ শিরোনাম</h3>
+                <label for="headline-input">শিরোনাম লিখুন:</label>
+                <textarea id="headline-input" rows="3">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</textarea>
+                <div class="slider-row"><label for="font-size">টেক্সট সাইজ:</label><input type="range" id="font-size" min="40" max="130" value="72"><span class="value-disp" id="font-size-val">72px</span></div>
+                <div class="slider-row"><label for="side-margin">পাশের মার্জিন:</label><input type="range" id="side-margin" min="60" max="500" value="100"><span class="value-disp" id="side-margin-val">100px</span></div>
+            </div>
+            <div class="control-group">
+                <h3>৪. ফুটার সেটিংস</h3>
+                <label class="checkbox-row"><input type="checkbox" id="toggle-comment" checked> “বিস্তারিত কমেন্টে” লেখা দেখান</label>
+            </div>
+            <div class="control-group">
+                <h3>৫. বিজ্ঞাপন ব্যানার সেটিংস</h3>
+                <label class="checkbox-row"><input type="checkbox" id="toggle-ad" checked> বিজ্ঞাপন ব্যানার চালু রাখুন</label>
+                <div id="ad-controls-sub">
+                    <label for="ad-select">বিজ্ঞাপন ব্যানার নির্বাচন করুন:</label>
+                    <select id="ad-select">
+                        <option value="0">বিজ্ঞাপন 01: NCEM</option>
+                        <option value="1">বিজ্ঞাপন 02: Mukti Clinic</option>
+                        <option value="2">বিজ্ঞাপন 03: Rupon</option>
+                        <option value="3">বিজ্ঞাপন 04: Monir Dental</option>
+                        <option value="4">বিজ্ঞাপন 05: NCTTA</option>
+                    </select>
+                    <button type="button" id="next-ad-btn" class="btn-action" style="width:100%">পরবর্তী বিজ্ঞাপন ↻</button>
+                </div>
+            </div>
+            <button class="btn-download" id="download-btn" type="button">ফটোকার্ড ডাউনলোড করুন (HD JPG)</button>
+        </div>
+    </div>
+
+    <script>
+        const adBanners = [
+            { name: 'NCEM', url: 'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/ads-ncem.jpg' },
+            { name: 'Mukti Clinic', url: 'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/mukti-clinic.jpg' },
+            { name: 'Rupon', url: 'https://www.dnbangla.com.bd/wp-content/uploads/2026/10/ads-khadija-humayra-rupon.jpg' },
+            { name: 'Monir Dental', url: 'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/Monir-Dental.jpg' },
+            { name: 'NCTTA', url: 'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/NCTTA-Academy.jpg' }
+        ];
+
+        const $ = id => document.getElementById(id);
+        const cardWrapper = $('card-wrapper');
+        const photocard = $('photocard');
+        const previewSizeInfo = $('preview-size-info');
+        const featureImg = $('feature-img');
+        const placeholderText = $('placeholder-text');
+        const imgInput = $('img-input');
+        const imgZoom = $('img-zoom');
+        const imgPanX = $('img-pan-x');
+        const imgPanY = $('img-pan-y');
+        const datePicker = $('date-picker');
+        const cardDate = $('card-date');
+        const headlineInput = $('headline-input');
+        const cardHeadline = $('card-headline');
+        const headlineContainer = $('headline-container');
+        const fontSizeInput = $('font-size');
+        const sideMarginInput = $('side-margin');
+        const toggleComment = $('toggle-comment');
+        const cardFooterLeft = $('card-footer-left');
+        const toggleAd = $('toggle-ad');
+        const adBannerImg = $('ad-banner-img');
+        const adBannerContainer = $('ad-banner-container');
+        const adSelect = $('ad-select');
+        const adControlsSub = $('ad-controls-sub');
+        const downloadBtn = $('download-btn');
+        const originalDownloadText = downloadBtn.textContent;
+        let currentAdIndex = 0;
+
+        function updateScale() {
+            photocard.style.transform = `scale(${cardWrapper.clientWidth / 1920})`;
+        }
+        window.addEventListener('resize', updateScale);
+
+        function updateCardDimensions() {
+            const enabled = toggleAd.checked;
+            photocard.style.height = enabled ? '1920px' : '1642px';
+            cardWrapper.style.aspectRatio = enabled ? '1 / 1' : '1920 / 1642';
+            adBannerContainer.style.display = enabled ? 'block' : 'none';
+            adControlsSub.style.display = enabled ? 'block' : 'none';
+            previewSizeInfo.textContent = enabled ? 'লাইভ প্রিভিউ (১৯২০ x ১৯২০ px)' : 'লাইভ প্রিভিউ (১৯২০ x ১৬৪২ px)';
+            updateScale();
+        }
+        toggleAd.addEventListener('change', updateCardDimensions);
+
+        function setAdBanner(index) {
+            currentAdIndex = ((index % adBanners.length) + adBanners.length) % adBanners.length;
+            // Must be set before src for CORS-enabled canvas use.
+            adBannerImg.crossOrigin = 'anonymous';
+            adBannerImg.src = adBanners[currentAdIndex].url;
+            adSelect.value = String(currentAdIndex);
+        }
+        adSelect.addEventListener('change', event => setAdBanner(Number(event.target.value)));
+        $('next-ad-btn').addEventListener('click', () => setAdBanner(currentAdIndex + 1));
+
+        function toBanglaNum(value) {
+            const digits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+            return String(value).replace(/[0-9]/g, digit => digits[Number(digit)]);
+        }
+        function formatBanglaDate(date) {
+            const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+            return `${toBanglaNum(String(date.getDate()).padStart(2, '0'))} ${months[date.getMonth()]} ${toBanglaNum(date.getFullYear())}`;
+        }
+        function setAutoDate() {
+            const today = new Date();
+            datePicker.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+            cardDate.textContent = formatBanglaDate(today);
+        }
+        datePicker.addEventListener('change', event => {
+            if (!event.target.value) return;
+            const [year, month, day] = event.target.value.split('-').map(Number);
+            cardDate.textContent = formatBanglaDate(new Date(year, month - 1, day));
+        });
+        $('today-date-btn').addEventListener('click', setAutoDate);
+
+        imgInput.addEventListener('change', event => {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = loadEvent => {
+                featureImg.onload = () => {
+                    featureImg.style.display = 'block';
+                    placeholderText.style.display = 'none';
+                    imgZoom.value = '1'; imgPanX.value = '0'; imgPanY.value = '0';
+                    updateImageTransform();
+                };
+                featureImg.src = loadEvent.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+        function updateImageTransform() {
+            featureImg.style.transform = `scale(${imgZoom.value}) translate(${imgPanX.value}px, ${imgPanY.value}px)`;
+            $('zoom-val').textContent = `${imgZoom.value}x`;
+            $('pan-x-val').textContent = `${imgPanX.value}px`;
+            $('pan-y-val').textContent = `${imgPanY.value}px`;
+        }
+        imgZoom.addEventListener('input', updateImageTransform);
+        imgPanX.addEventListener('input', updateImageTransform);
+        imgPanY.addEventListener('input', updateImageTransform);
+        $('reset-zoom').addEventListener('click', () => { imgZoom.value = '1'; updateImageTransform(); });
+        $('reset-pan-x').addEventListener('click', () => { imgPanX.value = '0'; updateImageTransform(); });
+        $('reset-pan-y').addEventListener('click', () => { imgPanY.value = '0'; updateImageTransform(); });
+
+        function updateHeadline() {
+            const fontSize = Number(fontSizeInput.value);
+            const margin = Number(sideMarginInput.value);
+            cardHeadline.textContent = headlineInput.value.trim();
+            cardHeadline.style.fontSize = `${fontSize}px`;
+            headlineContainer.style.paddingLeft = `${margin}px`;
+            headlineContainer.style.paddingRight = `${margin}px`;
+            $('font-size-val').textContent = `${fontSize}px`;
+            $('side-margin-val').textContent = `${margin}px`;
+        }
+        headlineInput.addEventListener('input', updateHeadline);
+        fontSizeInput.addEventListener('input', updateHeadline);
+        sideMarginInput.addEventListener('input', updateHeadline);
+        toggleComment.addEventListener('change', event => {
+            cardFooterLeft.style.visibility = event.target.checked ? 'visible' : 'hidden';
+        });
+
+        function waitForImage(image) {
+            if (image.complete) {
+                if (!image.naturalWidth) return Promise.reject(new Error('বিজ্ঞাপন ছবি লোড হয়নি।'));
+                return typeof image.decode === 'function' ? image.decode() : Promise.resolve();
+            }
+            return new Promise((resolve, reject) => {
+                const cleanup = () => { image.removeEventListener('load', onLoad); image.removeEventListener('error', onError); };
+                const onLoad = async () => {
+                    cleanup();
+                    try { if (typeof image.decode === 'function') await image.decode(); resolve(); }
+                    catch (error) { reject(error); }
+                };
+                const onError = () => { cleanup(); reject(new Error('বিজ্ঞাপন ছবি লোড হয়নি।')); };
+                image.addEventListener('load', onLoad, { once: true });
+                image.addEventListener('error', onError, { once: true });
+                if (image.complete) {
+                    cleanup();
+                    if (!image.naturalWidth) reject(new Error('বিজ্ঞাপন ছবি লোড হয়নি।'));
+                    else Promise.resolve(typeof image.decode === 'function' ? image.decode() : undefined).then(resolve, reject);
+                }
+            });
+        }
+
+        downloadBtn.addEventListener('click', async () => {
+            if (downloadBtn.disabled) return;
+            const includeAd = toggleAd.checked;
+            const exportHeight = includeAd ? 1920 : 1642;
+            const previousTransform = photocard.style.transform;
+            downloadBtn.disabled = true;
+            downloadBtn.textContent = includeAd ? 'বিজ্ঞাপন লোড হচ্ছে...' : 'ডাউনলোড তৈরি হচ্ছে...';
+            try {
+                if (includeAd) await waitForImage(adBannerImg);
+                downloadBtn.textContent = 'ডাউনলোড তৈরি হচ্ছে...';
+                photocard.style.transform = 'none';
+                const canvas = await html2canvas(photocard, {
+                    width: 1920,
+                    height: exportHeight,
+                    scale: 1,
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: '#0B1224',
+                    logging: false
+                });
+                const link = document.createElement('a');
+                link.download = `Insight_Edition_${Date.now()}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.98);
+                link.click();
+            } catch (error) {
+                console.error('ফটোকার্ড ডাউনলোড ব্যর্থ:', error);
+                alert('ফটোকার্ড তৈরি হয়নি। বিজ্ঞাপনের ছবি লোড এবং সার্ভারের CORS অনুমতি পরীক্ষা করুন।');
+            } finally {
+                photocard.style.transform = previousTransform;
+                updateScale();
+                downloadBtn.textContent = originalDownloadText;
+                downloadBtn.disabled = false;
+            }
+        });
+
+        setAdBanner(0);
+        setAutoDate();
+        updateImageTransform();
+        updateHeadline();
+        updateCardDimensions();
+    </script>
+</body>
+</html>
