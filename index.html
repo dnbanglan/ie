@@ -2,26 +2,26 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ইনসাইট এডিশন ফটোকার্ড জেনারেটর - INSIGHT EDITION</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; padding: 20px; background: #1a1e29; color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; }
-    h1 { margin: 0 0 20px; text-align: center; font-size: 22px; color: #e2e8f0; }
-    .main { display: flex; gap: 24px; align-items: flex-start; max-width: 1400px; margin: auto; padding: 20px; background: #0d1117; border-radius: 12px; }
-    .preview { width: 100%; max-width: 550px; margin: auto; }
+    body { margin: 0; padding: 20px; background: #1a1e29; color: #fff; font-family: Arial, sans-serif; }
+    h1 { text-align: center; font-size: 22px; }
+    .main { max-width: 1400px; margin: auto; display: flex; gap: 24px; align-items: flex-start; }
+    .preview { width: min(100%, 550px); margin: auto; }
     #wrapper { width: 100%; aspect-ratio: 1; position: relative; overflow: hidden; background: #0B1224; }
     #card { position: absolute; top: 0; left: 0; width: 1920px; height: 1920px; transform-origin: top left; overflow: hidden; background: #0B1224; font-family: 'SolaimanLipi', 'Kalpurush', sans-serif; }
-    .feature { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; overflow: hidden; background: #1a2236; }
-    #feature-img { width: 100%; height: 100%; display: none; object-fit: cover; transform-origin: center; }
+    .feature { position: absolute; inset: 0 0 auto; width: 1920px; height: 1080px; overflow: hidden; background: #1a2236; }
+    #feature-img { width: 100%; height: 100%; display: none; object-fit: cover; }
     #placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #c9d1d9; font-size: 44px; }
-    #date { position: absolute; top: 88px; left: 1495px; width: 426px; height: 76px; z-index: 3; display: grid; place-items: center; color: white; font-size: 38px; font-weight: bold; background: rgba(11,18,36,.4); }
-    .brand-wrap { position: absolute; top: 939px; width: 100%; height: 131px; display: grid; place-items: center; z-index: 4; }
-    .brand { padding: 10px 50px; border: 4px solid white; border-radius: 35px 0 35px 0; background: #0B1224; font: 900 52px Arial, sans-serif; letter-spacing: 2px; }
+    #date { position: absolute; top: 88px; right: 0; width: 426px; height: 76px; display: grid; place-items: center; font-size: 38px; font-weight: bold; background: rgba(11,18,36,.4); }
+    .brand-wrap { position: absolute; top: 939px; width: 100%; height: 131px; display: grid; place-items: center; }
+    .brand { background: #0B1224; border: 4px solid white; border-radius: 35px 0 35px 0; padding: 10px 50px; font: 900 52px Arial,sans-serif; letter-spacing: 2px; }
     .divider { position: absolute; top: 1072px; width: 100%; height: 8px; background: #fff; }
-    #headline { position: absolute; top: 1153px; left: 0; width: 100%; height: 335px; padding: 0 100px; display: grid; place-items: center; overflow: hidden; color: white; text-align: center; font-size: 72px; line-height: 1.3; font-weight: bold; overflow-wrap: anywhere; white-space: pre-wrap; }
-    .footer { position: absolute; top: 1542px; left: 0; width: 100%; height: 89px; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 0 400px; background: linear-gradient(90deg, transparent, #101f3c 16%, #101f3c 84%, transparent); font-size: 30px; white-space: nowrap; }
+    #headline { position: absolute; top: 1153px; left: 0; width: 100%; height: 335px; padding: 0 100px; display: grid; place-items: center; overflow: hidden; text-align: center; font-weight: bold; line-height: 1.3; overflow-wrap: anywhere; }
+    .footer { position: absolute; top: 1542px; left: 0; width: 100%; height: 89px; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 0 400px; background: linear-gradient(90deg, transparent, #101f3c 16%, #101f3c 84%, transparent); font-size: 30px; white-space: nowrap; }
     .spacer { position: absolute; top: 1631px; width: 100%; height: 11px; background: #0B1224; }
     #ad-area { position: absolute; top: 1642px; width: 1920px; height: 278px; overflow: hidden; background: #0B1224; }
     #ad-img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -31,10 +31,9 @@
     label { display: block; margin: 10px 0; color: #c9d1d9; }
     input, select, textarea, button { width: 100%; margin-top: 6px; padding: 10px; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: white; font: inherit; }
     input[type=checkbox] { width: auto; }
-    input[type=range] { accent-color: #58a6ff; }
     button { cursor: pointer; background: #238636; font-weight: bold; }
     button:disabled { opacity: .7; cursor: wait; }
-    .hint { color: #aab4c0; font-size: 13px; line-height: 1.5; }
+    .hint { color: #9da7b3; font-size: 13px; line-height: 1.5; }
     @media (max-width: 900px) { .main { flex-direction: column; } .preview { max-width: 100%; } }
   </style>
 </head>
@@ -55,146 +54,104 @@
       <p class="hint" id="size-info" style="text-align:center">লাইভ প্রিভিউ (১৯২০ × ১৯২০ px)</p>
     </section>
     <section class="controls">
-      <div class="group">
-        <h2>ফিচার ছবি</h2>
-        <label>ছবি আপলোড<input id="feature-upload" type="file" accept="image/*"></label>
-        <label>জুম<input id="zoom" type="range" min="1" max="3" step="0.05" value="1"></label>
-        <label>ডানে-বামে<input id="pan-x" type="range" min="-600" max="600" step="5" value="0"></label>
-        <label>উপরে-নিচে<input id="pan-y" type="range" min="-600" max="600" step="5" value="0"></label>
-      </div>
-      <div class="group">
-        <h2>তারিখ ও শিরোনাম</h2>
-        <label>তারিখ<input id="date-input" type="date"></label>
-        <label>শিরোনাম<textarea id="headline-input" rows="3">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</textarea></label>
-        <label>ফন্ট সাইজ<input id="font-size" type="range" min="40" max="130" value="72"></label>
-      </div>
-      <div class="group">
-        <h2>বিজ্ঞাপন ব্যানার</h2>
-        <label><input id="ad-toggle" type="checkbox" checked> ব্যানার দেখান</label>
-        <label>ব্যানার নির্বাচন করুন<select id="ad-select"><option value="0">NCEM</option><option value="1">Mukti Clinic</option><option value="2">Rupon</option><option value="3">Monir Dental</option><option value="4">NCTTA</option></select></label>
-        <label>প্রয়োজনে ব্যানার ফাইল সরাসরি আপলোড করুন<input id="ad-upload" type="file" accept="image/*"></label>
-        <p class="hint">বাইরের ছবির CORS না থাকলে ডাউনলোডে কালো আসতে পারে। সমাধান: এই রিপোর ad-image.php ফাইলটি আপনার PHP hosting-এর web root-এ আপলোড করুন, অথবা উপরের ব্যানার ফাইল আপলোড ব্যবহার করুন।</p>
-      </div>
+      <div class="group"><h2>ফিচার ছবি</h2><label>ছবি আপলোড<input id="image-input" type="file" accept="image/*"></label></div>
+      <div class="group"><h2>তারিখ ও শিরোনাম</h2><label>তারিখ<input id="date-input" type="date"></label><label>শিরোনাম<textarea id="headline-input" rows="3">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</textarea></label><label>ফন্ট সাইজ<input id="font-size" type="range" min="40" max="130" value="72"></label></div>
+      <div class="group"><h2>বিজ্ঞাপন</h2><label><input id="ad-toggle" type="checkbox" checked> ব্যানার দেখান</label><label>ব্যানার বাছাই<select id="ad-select"><option value="0">NCEM</option><option value="1">Mukti Clinic</option><option value="2">Rupon</option><option value="3">Monir Dental</option><option value="4">NCTTA</option></select></label><p class="hint">ব্যানারটি CORS ছাড়াই ডাউনলোড করতে, ad-image.php-কে www.dnbangla.com.bd-এর web root-এ আপলোড করুন. GitHub Pages নিজে PHP চালাতে পারে না.</p></div>
       <div class="group"><h2>ফুটার</h2><label><input id="comment-toggle" type="checkbox" checked> “বিস্তারিত কমেন্টে” দেখান</label></div>
       <button id="download" type="button">ফটোকার্ড ডাউনলোড করুন (HD JPG)</button>
     </section>
   </main>
 <script>
-  // Endpoint must be deployed on the PHP host. Do not use a public, arbitrary URL proxy.
-  const AD_ENDPOINT = 'https://www.dnbangla.com.bd/ad-image.php?ad=';
-  const directAds = [
-    'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/ads-ncem.jpg',
-    'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/mukti-clinic.jpg',
-    'https://www.dnbangla.com.bd/wp-content/uploads/2026/10/ads-khadija-humayra-rupon.jpg',
-    'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/Monir-Dental.jpg',
-    'https://www.dnbangla.com.bd/wp-content/uploads/2026/03/NCTTA-Academy.jpg'
-  ];
+  // Deploy ad-image.php at the root of www.dnbangla.com.bd. The endpoint only
+  // serves a fixed allow-list of banner URLs and returns permissive CORS headers.
+  const proxyBase = 'https://www.dnbangla.com.bd/ad-image.php?ad=';
   const card = document.getElementById('card');
   const wrapper = document.getElementById('wrapper');
   const adImage = document.getElementById('ad-img');
-  let localAdUrl = null;
+  const adToggle = document.getElementById('ad-toggle');
+  const adSelect = document.getElementById('ad-select');
+  const downloadButton = document.getElementById('download');
 
-  function updateScale() { card.style.transform = `scale(${wrapper.clientWidth / 1920})`; }
-  window.addEventListener('resize', updateScale);
+  function scalePreview() { card.style.transform = `scale(${wrapper.clientWidth / 1920})`; }
+  window.addEventListener('resize', scalePreview);
   function updateDimensions() {
-    const enabled = document.getElementById('ad-toggle').checked;
-    card.style.height = enabled ? '1920px' : '1642px';
-    wrapper.style.aspectRatio = enabled ? '1 / 1' : '1920 / 1642';
-    document.getElementById('ad-area').style.display = enabled ? 'block' : 'none';
-    document.getElementById('size-info').textContent = enabled ? 'লাইভ প্রিভিউ (১৯২০ × ১৯২০ px)' : 'লাইভ প্রিভিউ (১৯২০ × ১৬৪২ px)';
-    updateScale();
+    const withAd = adToggle.checked;
+    card.style.height = withAd ? '1920px' : '1642px';
+    wrapper.style.aspectRatio = withAd ? '1 / 1' : '1920 / 1642';
+    document.getElementById('ad-area').style.display = withAd ? 'block' : 'none';
+    document.getElementById('size-info').textContent = withAd ? 'লাইভ প্রিভিউ (১৯২০ × ১৯২০ px)' : 'লাইভ প্রিভিউ (১৯২০ × ১৬৪২ px)';
+    scalePreview();
   }
-  function setAd(index) {
-    const i = Math.max(0, Math.min(directAds.length - 1, Number(index) || 0));
-    document.getElementById('ad-select').value = String(i);
+  function selectAd(index) {
+    const value = Math.max(0, Math.min(4, Number(index) || 0));
+    adSelect.value = String(value);
     adImage.crossOrigin = 'anonymous';
-    adImage.src = localAdUrl || `${AD_ENDPOINT}${i}`;
-    adImage.onerror = () => {
-      // Preview fallback only. Direct cross-origin image may still be blocked on export.
-      if (!localAdUrl && adImage.src !== directAds[i]) adImage.src = directAds[i];
-    };
+    adImage.src = `${proxyBase}${value}`;
   }
-  document.getElementById('ad-toggle').addEventListener('change', updateDimensions);
-  document.getElementById('ad-select').addEventListener('change', e => { localAdUrl = null; setAd(e.target.value); });
-  document.getElementById('ad-upload').addEventListener('change', e => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) { alert('একটি ছবির ফাইল নির্বাচন করুন।'); return; }
-    if (localAdUrl) URL.revokeObjectURL(localAdUrl);
-    localAdUrl = URL.createObjectURL(file);
-    adImage.removeAttribute('crossorigin');
-    adImage.src = localAdUrl;
-  });
-  setAd(0);
+  adToggle.addEventListener('change', updateDimensions);
+  adSelect.addEventListener('change', () => selectAd(adSelect.value));
+  selectAd(0);
   updateDimensions();
 
   const dateInput = document.getElementById('date-input');
-  function showDate(value) {
+  function setCardDate(value) {
     const d = value ? new Date(`${value}T00:00:00`) : new Date();
     const bn = n => String(n).replace(/[0-9]/g, digit => '০১২৩৪৫৬৭৮৯'[Number(digit)]);
     const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
     document.getElementById('date').textContent = `${bn(String(d.getDate()).padStart(2,'0'))} ${months[d.getMonth()]} ${bn(d.getFullYear())}`;
   }
-  const today = new Date();
-  dateInput.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  showDate(dateInput.value);
-  dateInput.addEventListener('change', () => showDate(dateInput.value));
+  const now = new Date();
+  dateInput.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  setCardDate(dateInput.value);
+  dateInput.addEventListener('change', () => setCardDate(dateInput.value));
 
-  document.getElementById('feature-upload').addEventListener('change', e => {
+  document.getElementById('image-input').addEventListener('change', e => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      const image = document.getElementById('feature-img');
-      image.src = reader.result;
-      image.style.display = 'block';
+      document.getElementById('feature-img').src = reader.result;
+      document.getElementById('feature-img').style.display = 'block';
       document.getElementById('placeholder').style.display = 'none';
-      updateFeatureTransform();
     };
     reader.readAsDataURL(file);
   });
-  function updateFeatureTransform() {
-    const image = document.getElementById('feature-img');
-    image.style.transform = `scale(${document.getElementById('zoom').value}) translate(${document.getElementById('pan-x').value}px, ${document.getElementById('pan-y').value}px)`;
-  }
-  ['zoom','pan-x','pan-y'].forEach(id => document.getElementById(id).addEventListener('input', updateFeatureTransform));
   document.getElementById('headline-input').addEventListener('input', e => document.getElementById('headline').textContent = e.target.value);
   document.getElementById('font-size').addEventListener('input', e => document.getElementById('headline').style.fontSize = `${e.target.value}px`);
   document.getElementById('comment-toggle').addEventListener('change', e => document.getElementById('comment').style.visibility = e.target.checked ? 'visible' : 'hidden');
 
-  function waitForImage(image) {
+  function waitForAd(image) {
     if (image.complete && image.naturalWidth > 0) return Promise.resolve();
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('ব্যানার লোড হতে পারেনি। ad-image.php আপলোড হয়েছে কি না দেখুন; বিকল্পভাবে ব্যানার ফাইল আপলোড করুন।')), 20000);
+      const timer = setTimeout(() => reject(new Error('ব্যানার লোড হতে পারেনি। ad-image.php সার্ভারে ইনস্টল করা আছে কি না পরীক্ষা করুন।')), 20000);
       image.addEventListener('load', () => { clearTimeout(timer); resolve(); }, { once: true });
-      image.addEventListener('error', () => { clearTimeout(timer); reject(new Error('ব্যানার লোড করা যায়নি। ব্যানার ফাইল আপলোড করে আবার চেষ্টা করুন।')); }, { once: true });
+      image.addEventListener('error', () => { clearTimeout(timer); reject(new Error('ব্যানার লোড ব্যর্থ। ad-image.php endpoint পরীক্ষা করুন।')); }, { once: true });
     });
   }
-  document.getElementById('download').addEventListener('click', async e => {
-    const button = e.currentTarget;
+  downloadButton.addEventListener('click', async () => {
     const originalTransform = card.style.transform;
     const originalHeight = card.style.height;
-    const exportHeight = document.getElementById('ad-toggle').checked ? 1920 : 1642;
-    button.disabled = true;
-    button.textContent = 'ডাউনলোড তৈরি হচ্ছে...';
+    const height = adToggle.checked ? 1920 : 1642;
+    downloadButton.disabled = true;
+    downloadButton.textContent = 'ডাউনলোড তৈরি হচ্ছে...';
     try {
-      if (exportHeight === 1920) await waitForImage(adImage);
+      if (adToggle.checked) await waitForAd(adImage);
       card.style.transform = 'none';
-      card.style.height = `${exportHeight}px`;
-      const canvas = await html2canvas(card, { width: 1920, height: exportHeight, scale: 1, useCORS: true, allowTaint: false, backgroundColor: '#0B1224', imageTimeout: 20000 });
+      card.style.height = `${height}px`;
+      const canvas = await html2canvas(card, { width: 1920, height, scale: 1, useCORS: true, allowTaint: false, backgroundColor: '#0B1224' });
       const link = document.createElement('a');
       link.download = `Insight_Edition_${Date.now()}.jpg`;
       link.href = canvas.toDataURL('image/jpeg', 0.98);
       link.click();
     } catch (error) {
       console.error(error);
-      alert(`${error.message}\n\nসমাধান: ব্যানার ফাইলটি এই পেজে আপলোড করুন অথবা PHP endpoint ইনস্টল করুন।`);
+      alert(`${error.message}\nপ্রয়োজনে ad-image.php-কে www.dnbangla.com.bd-এর web root-এ আপলোড করুন।`);
     } finally {
       card.style.height = originalHeight;
       card.style.transform = originalTransform;
-      updateScale();
-      button.disabled = false;
-      button.textContent = 'ফটোকার্ড ডাউনলোড করুন (HD JPG)';
+      scalePreview();
+      downloadButton.disabled = false;
+      downloadButton.textContent = 'ফটোকার্ড ডাউনলোড করুন (HD JPG)';
     }
   });
 </script>
