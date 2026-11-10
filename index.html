@@ -1,159 +1,892 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 20px; background: #1a1e29; color: #fff; font-family: Arial, sans-serif; }
-    h1 { text-align: center; font-size: 22px; }
-    .main { max-width: 1400px; margin: auto; display: flex; gap: 24px; align-items: flex-start; }
-    .preview { width: min(100%, 550px); margin: auto; }
-    #wrapper { width: 100%; aspect-ratio: 1; position: relative; overflow: hidden; background: #0B1224; }
-    #card { position: absolute; top: 0; left: 0; width: 1920px; height: 1920px; transform-origin: top left; overflow: hidden; background: #0B1224; font-family: 'SolaimanLipi', 'Kalpurush', sans-serif; }
-    .feature { position: absolute; inset: 0 0 auto; width: 1920px; height: 1080px; overflow: hidden; background: #1a2236; }
-    #feature-img { width: 100%; height: 100%; display: none; object-fit: cover; }
-    #placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #c9d1d9; font-size: 44px; }
-    #date { position: absolute; top: 88px; right: 0; width: 426px; height: 76px; display: grid; place-items: center; font-size: 38px; font-weight: bold; background: rgba(11,18,36,.4); }
-    .brand-wrap { position: absolute; top: 939px; width: 100%; height: 131px; display: grid; place-items: center; }
-    .brand { background: #0B1224; border: 4px solid white; border-radius: 35px 0 35px 0; padding: 10px 50px; font: 900 52px Arial,sans-serif; letter-spacing: 2px; }
-    .divider { position: absolute; top: 1072px; width: 100%; height: 8px; background: #fff; }
-    #headline { position: absolute; top: 1153px; left: 0; width: 100%; height: 335px; padding: 0 100px; display: grid; place-items: center; overflow: hidden; text-align: center; font-weight: bold; line-height: 1.3; overflow-wrap: anywhere; }
-    .footer { position: absolute; top: 1542px; left: 0; width: 100%; height: 89px; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 0 400px; background: linear-gradient(90deg, transparent, #101f3c 16%, #101f3c 84%, transparent); font-size: 30px; white-space: nowrap; }
-    .spacer { position: absolute; top: 1631px; width: 100%; height: 11px; background: #0B1224; }
-    #ad-area { position: absolute; top: 1642px; width: 1920px; height: 278px; overflow: hidden; background: #0B1224; }
-    #ad-img { display: block; width: 100%; height: 100%; object-fit: cover; }
-    .controls { flex: 1; display: grid; gap: 12px; }
-    .group { padding: 16px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; }
-    .group h2 { margin: 0 0 12px; color: #58a6ff; font-size: 16px; }
-    label { display: block; margin: 10px 0; color: #c9d1d9; }
-    input, select, textarea, button { width: 100%; margin-top: 6px; padding: 10px; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: white; font: inherit; }
-    input[type=checkbox] { width: auto; }
-    button { cursor: pointer; background: #238636; font-weight: bold; }
-    button:disabled { opacity: .7; cursor: wait; }
-    .hint { color: #9da7b3; font-size: 13px; line-height: 1.5; }
-    @media (max-width: 900px) { .main { flex-direction: column; } .preview { max-width: 100%; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ইনসাইট এডিশন ফটোকার্ড জেনারেটর - INSIGHT EDITION</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'SolaimanLipi', 'Kalpurush';
+            background-color: #1a1e29;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #e2e8f0;
+            text-align: center;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            gap: 25px;
+            background-color: #0d1117;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .preview-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .card-wrapper {
+            width: 100%;
+            /* Dynamic aspect ratio controlled by JS */
+            aspect-ratio: 1920 / 1920; 
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #0B1224;
+            transition: aspect-ratio 0.2s ease;
+        }
+
+        /* Fixed 1920px Canvas */
+        #photocard {
+            width: 1920px;
+            height: 1920px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: top left;
+            background-color: #0B1224;
+            overflow: hidden;
+            font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
+        }
+
+        /* 1. Feature Image (0px to 1080px) */
+        .feature-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            background-color: #1a2236;
+        }
+
+        #feature-img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform-origin: center center;
+        }
+
+        .img-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b949e;
+            font-size: 45px;
+            border: 2px dashed #30363d;
+        }
+
+        /* 2. Date Box (Top 88px to 160px -> Height 76px, Width 426px, Left 1495.857px) */
+        .date-box {
+            position: absolute;
+            top: 88px;
+            left: 1495.857px;
+            width: 426px;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 38px;
+            font-weight: bold;
+            z-index: 10;
+            background-color: rgba(11, 18, 36, 0.3); /* 0B1224 with 30% opacity */
+            box-sizing: border-box;
+        }
+
+        /* 3. Branding Label (Top 939px to 1070px -> Height 131px) */
+        .branding-container {
+            position: absolute;
+            top: 939px;
+            left: 0;
+            width: 1920px;
+            height: 131px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 12;
+            pointer-events: none;
+        }
+
+        .branding-label {
+            background-color: #0B1224;
+            color: #ffffff;
+            font-size: 52px;
+            font-weight: 900;
+            padding: 10px 50px;
+            letter-spacing: 2px;
+            border: 4px solid #ffffff;
+            /* Top-left round, Top-right sharp, Bottom-right round, Bottom-left sharp */
+            border-top-left-radius: 35px;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 35px;
+            border-bottom-left-radius: 0px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* 4. White Line (Top 1072px to 1080px -> Height 8px) */
+        .divider-line {
+            position: absolute;
+            top: 1072px;
+            left: 0;
+            width: 1920px;
+            height: 8px;
+            background-color: #ffffff;
+            z-index: 11;
+        }
+
+        /* 5. Headline Container (Top 1153px to 1488px -> Height 335px) */
+        .headline-container {
+            position: absolute;
+            top: 1153px;
+            left: 0;
+            width: 1920px;
+            height: 335px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 100px;
+            box-sizing: border-box;
+            z-index: 5;
+            overflow: hidden; /* Ensures text never spills outside 335px height */
+        }
+
+        .headline-text {
+            color: #ffffff;
+            font-size: 72px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.3;
+            width: 100%;
+            word-wrap: break-word;
+            transition: font-size 0.1s, padding 0.1s;
+        }
+
+        /* 6. Footer Bar (Top 1542px to 1631px -> Height 89px) */
+        .footer-bar {
+            position: absolute;
+            top: 1542px;
+            left: 0;
+            width: 1920px;
+            height: 89px;
+            z-index: 5;
+            /* 0B1224 gradient background (300px opacity fade on left and right) */
+            background: linear-gradient(
+                90deg, 
+                rgba(16, 31, 60, 0) 0px, 
+                rgba(16, 31, 60, 1) 300px, 
+                rgba(16, 31, 60, 1) 1620px, 
+                rgba(16, 31, 60, 0) 1920px
+            );
+        }
+
+        .footer-left {
+            position: absolute;
+            left: 400px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .footer-right {
+            position: absolute;
+            right: 400px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+
+        .fb-icon {
+            width: 36px;
+            height: 36px;
+            fill: #ffffff;
+        }
+
+        /* 7. Background Color Area (Top 1631px to 1642px) */
+        .bottom-bg-spacer {
+            position: absolute;
+            top: 1631px;
+            left: 0;
+            width: 1920px;
+            height: 11px;
+            background-color: #0B1224;
+            z-index: 4;
+        }
+
+        /* 8. Ad Banner Area (Top 1642px to 1920px -> Height 278px) */
+        .ad-banner-container {
+            position: absolute;
+            top: 1642px;
+            left: 0;
+            width: 1920px;
+            height: 278px;
+            overflow: hidden;
+            background-color: #000;
+            z-index: 10;
+        }
+
+        #ad-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .control-group {
+            background-color: #161b22;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+
+        .control-group h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: #58a6ff;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 5px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #c9d1d9;
+        }
+
+        input[type="text"], select, textarea, input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 75px;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .slider-row label {
+            width: 120px;
+            margin-bottom: 0;
+            font-size: 13px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: #58a6ff;
+        }
+
+        .value-disp {
+            width: 50px;
+            text-align: right;
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .btn-reset, .btn-action {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-reset:hover, .btn-action:hover {
+            background-color: #30363d;
+            border-color: #8b949e;
+        }
+
+        .btn-reset-danger {
+            color: #f85149;
+        }
+
+        .btn-reset-danger:hover {
+            border-color: #f85149;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            user-select: none;
+            margin-bottom: 10px;
+        }
+
+        .btn-download {
+            background-color: #238636;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-download:hover {
+            background-color: #2ea043;
+        }
+
+        .file-upload-btn {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .file-upload-btn:hover {
+            background-color: #30363d;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
+            }
+
+            .preview-area {
+                max-width: 100%;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-  <h1>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</h1>
-  <main class="main">
-    <section class="preview">
-      <div id="wrapper"><div id="card">
-        <div class="feature"><div id="placeholder">ফিচার ছবি আপলোড করুন</div><img id="feature-img" alt="ফিচার ছবি"></div>
-        <div id="date"></div>
-        <div class="brand-wrap"><div class="brand">INSIGHT EDITION</div></div>
-        <div class="divider"></div>
-        <div id="headline">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</div>
-        <div class="footer"><span id="comment">বিস্তারিত কমেন্টে</span><span>/InsightEdition</span></div>
-        <div class="spacer"></div>
-        <div id="ad-area"><img id="ad-img" alt="বিজ্ঞাপন ব্যানার"></div>
-      </div></div>
-      <p class="hint" id="size-info" style="text-align:center">লাইভ প্রিভিউ (১৯২০ × ১৯২০ px)</p>
-    </section>
-    <section class="controls">
-      <div class="group"><h2>ফিচার ছবি</h2><label>ছবি আপলোড<input id="image-input" type="file" accept="image/*"></label></div>
-      <div class="group"><h2>তারিখ ও শিরোনাম</h2><label>তারিখ<input id="date-input" type="date"></label><label>শিরোনাম<textarea id="headline-input" rows="3">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</textarea></label><label>ফন্ট সাইজ<input id="font-size" type="range" min="40" max="130" value="72"></label></div>
-      <div class="group"><h2>বিজ্ঞাপন</h2><label><input id="ad-toggle" type="checkbox" checked> ব্যানার দেখান</label><label>ব্যানার বাছাই<select id="ad-select"><option value="0">NCEM</option><option value="1">Mukti Clinic</option><option value="2">Rupon</option><option value="3">Monir Dental</option><option value="4">NCTTA</option></select></label><p class="hint">ব্যানারটি CORS ছাড়াই ডাউনলোড করতে, ad-image.php-কে www.dnbangla.com.bd-এর web root-এ আপলোড করুন. GitHub Pages নিজে PHP চালাতে পারে না.</p></div>
-      <div class="group"><h2>ফুটার</h2><label><input id="comment-toggle" type="checkbox" checked> “বিস্তারিত কমেন্টে” দেখান</label></div>
-      <button id="download" type="button">ফটোকার্ড ডাউনলোড করুন (HD JPG)</button>
-    </section>
-  </main>
-<script>
-  // Deploy ad-image.php at the root of www.dnbangla.com.bd. The endpoint only
-  // serves a fixed allow-list of banner URLs and returns permissive CORS headers.
-  const proxyBase = 'https://www.dnbangla.com.bd/ad-image.php?ad=';
-  const card = document.getElementById('card');
-  const wrapper = document.getElementById('wrapper');
-  const adImage = document.getElementById('ad-img');
-  const adToggle = document.getElementById('ad-toggle');
-  const adSelect = document.getElementById('ad-select');
-  const downloadButton = document.getElementById('download');
 
-  function scalePreview() { card.style.transform = `scale(${wrapper.clientWidth / 1920})`; }
-  window.addEventListener('resize', scalePreview);
-  function updateDimensions() {
-    const withAd = adToggle.checked;
-    card.style.height = withAd ? '1920px' : '1642px';
-    wrapper.style.aspectRatio = withAd ? '1 / 1' : '1920 / 1642';
-    document.getElementById('ad-area').style.display = withAd ? 'block' : 'none';
-    document.getElementById('size-info').textContent = withAd ? 'লাইভ প্রিভিউ (১৯২০ × ১৯২০ px)' : 'লাইভ প্রিভিউ (১৯২০ × ১৬৪২ px)';
-    scalePreview();
-  }
-  function selectAd(index) {
-    const value = Math.max(0, Math.min(4, Number(index) || 0));
-    adSelect.value = String(value);
-    adImage.crossOrigin = 'anonymous';
-    adImage.src = `${proxyBase}${value}`;
-  }
-  adToggle.addEventListener('change', updateDimensions);
-  adSelect.addEventListener('change', () => selectAd(adSelect.value));
-  selectAd(0);
-  updateDimensions();
+    <h1>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</h1>
 
-  const dateInput = document.getElementById('date-input');
-  function setCardDate(value) {
-    const d = value ? new Date(`${value}T00:00:00`) : new Date();
-    const bn = n => String(n).replace(/[0-9]/g, digit => '০১২৩৪৫৬৭৮৯'[Number(digit)]);
-    const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
-    document.getElementById('date').textContent = `${bn(String(d.getDate()).padStart(2,'0'))} ${months[d.getMonth()]} ${bn(d.getFullYear())}`;
-  }
-  const now = new Date();
-  dateInput.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  setCardDate(dateInput.value);
-  dateInput.addEventListener('change', () => setCardDate(dateInput.value));
+    <div class="main-container">
+        <!-- Preview Panel -->
+        <div class="preview-area">
+            <div class="card-wrapper" id="card-wrapper">
+                <div id="photocard">
+                    <!-- 1. Feature Image Zone (0-1080px) -->
+                    <div class="feature-image-container">
+                        <div id="placeholder-text" class="img-placeholder">ফিচার ছবি আপলোড করুন</div>
+                        <img id="feature-img" src="" alt="Feature Image" style="display: none;">
+                    </div>
 
-  document.getElementById('image-input').addEventListener('change', e => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      document.getElementById('feature-img').src = reader.result;
-      document.getElementById('feature-img').style.display = 'block';
-      document.getElementById('placeholder').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-  });
-  document.getElementById('headline-input').addEventListener('input', e => document.getElementById('headline').textContent = e.target.value);
-  document.getElementById('font-size').addEventListener('input', e => document.getElementById('headline').style.fontSize = `${e.target.value}px`);
-  document.getElementById('comment-toggle').addEventListener('change', e => document.getElementById('comment').style.visibility = e.target.checked ? 'visible' : 'hidden');
+                    <!-- 2. Date Box (Top 88px, Left 1495.857px) -->
+                    <div class="date-box" id="card-date">০৪ নভেম্বর ২০২৬</div>
 
-  function waitForAd(image) {
-    if (image.complete && image.naturalWidth > 0) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('ব্যানার লোড হতে পারেনি। ad-image.php সার্ভারে ইনস্টল করা আছে কি না পরীক্ষা করুন।')), 20000);
-      image.addEventListener('load', () => { clearTimeout(timer); resolve(); }, { once: true });
-      image.addEventListener('error', () => { clearTimeout(timer); reject(new Error('ব্যানার লোড ব্যর্থ। ad-image.php endpoint পরীক্ষা করুন।')); }, { once: true });
-    });
-  }
-  downloadButton.addEventListener('click', async () => {
-    const originalTransform = card.style.transform;
-    const originalHeight = card.style.height;
-    const height = adToggle.checked ? 1920 : 1642;
-    downloadButton.disabled = true;
-    downloadButton.textContent = 'ডাউনলোড তৈরি হচ্ছে...';
-    try {
-      if (adToggle.checked) await waitForAd(adImage);
-      card.style.transform = 'none';
-      card.style.height = `${height}px`;
-      const canvas = await html2canvas(card, { width: 1920, height, scale: 1, useCORS: true, allowTaint: false, backgroundColor: '#0B1224' });
-      const link = document.createElement('a');
-      link.download = `Insight_Edition_${Date.now()}.jpg`;
-      link.href = canvas.toDataURL('image/jpeg', 0.98);
-      link.click();
-    } catch (error) {
-      console.error(error);
-      alert(`${error.message}\nপ্রয়োজনে ad-image.php-কে www.dnbangla.com.bd-এর web root-এ আপলোড করুন।`);
-    } finally {
-      card.style.height = originalHeight;
-      card.style.transform = originalTransform;
-      scalePreview();
-      downloadButton.disabled = false;
-      downloadButton.textContent = 'ফটোকার্ড ডাউনলোড করুন (HD JPG)';
-    }
-  });
-</script>
+                    <!-- 3. Branding Label (Top 939px to 1070px) -->
+                    <div class="branding-container">
+                        <div class="branding-label">INSIGHT EDITION</div>
+                    </div>
+
+                    <!-- 4. White Divider Line (Top 1072px) -->
+                    <div class="divider-line"></div>
+
+                    <!-- 5. Headline Container (Top 1153px to 1488px) -->
+                    <div class="headline-container">
+                        <div class="headline-text" id="card-headline">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</div>
+                    </div>
+
+                    <!-- 6. Footer Bar (Top 1542px to 1631px) -->
+                    <div class="footer-bar">
+                        <div class="footer-left" id="card-footer-left">বিস্তারিত কমেন্টে</div>
+                        <div class="footer-right">
+                            <svg class="fb-icon" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            <span id="card-social-handle">/InsightEdition</span>
+                        </div>
+                    </div>
+
+                    <!-- 7. Spacer Background (Top 1631px to 1642px) -->
+                    <div class="bottom-bg-spacer"></div>
+
+                    <!-- 8. Ad Banner Container (Top 1642px to 1920px) -->
+                    <div class="ad-banner-container" id="ad-banner-container">
+                        <img id="ad-banner-img" src="" alt="Ad Banner">
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 10px; font-size: 13px; color: #8b949e; text-align: center;" id="preview-size-info">লাইভ প্রিভিউ (১৯২০ x ১৯২০ px)</p>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <!-- 1. Feature Image Control -->
+            <div class="control-group">
+                <h3>১. ফিচার ছবি আপলোড ও পজিশনিং (১০৮০px চড়া)</h3>
+                <label class="file-upload-btn">
+                    ছবি আপলোড করুন
+                    <input type="file" id="img-input" accept="image/*">
+                </label>
+                
+                <div class="slider-row">
+                    <label for="img-zoom">জুম (Zoom):</label>
+                    <input type="range" id="img-zoom" min="1" max="3" step="0.05" value="1">
+                    <span class="value-disp" id="zoom-val">1x</span>
+                    <button class="btn-reset btn-reset-danger" id="reset-zoom">রিসেট</button>
+                </div>
+                <div class="slider-row">
+                    <label for="img-pan-x">ডানে-বামে:</label>
+                    <input type="range" id="img-pan-x" min="-600" max="600" step="5" value="0">
+                    <span class="value-disp" id="pan-x-val">0px</span>
+                    <button class="btn-reset btn-reset-danger" id="reset-pan-x">রিসেট</button>
+                </div>
+                <div class="slider-row">
+                    <label for="img-pan-y">উপরে-নিচে:</label>
+                    <input type="range" id="img-pan-y" min="-600" max="600" step="5" value="0">
+                    <span class="value-disp" id="pan-y-val">0px</span>
+                    <button class="btn-reset btn-reset-danger" id="reset-pan-y">রিসেট</button>
+                </div>
+            </div>
+
+            <!-- 2. Date Control -->
+            <div class="control-group">
+                <h3>২. তারিখ নির্ধারণ (মেন্যুয়াল / অটো)</h3>
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px;">
+                    <input type="date" id="date-picker" style="margin-bottom: 0;">
+                    <button type="button" id="today-date-btn" class="btn-action">আজকের চলতি তারিখ</button>
+                </div>
+            </div>
+
+            <!-- 3. Headline Control -->
+            <div class="control-group">
+                <h3>৩. সংবাদ শিরোনাম (Headline)</h3>
+                <label for="headline-input">শিরোনাম লিখুন:</label>
+                <textarea id="headline-input" rows="3" placeholder="সংবাদের শিরোনাম লিখুন...">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</textarea>
+
+                <div class="slider-row">
+                    <label for="font-size">টেক্সট সাইজ:</label>
+                    <input type="range" id="font-size" min="40" max="130" value="90">
+                    <span class="value-disp" id="font-size-val">72px</span>
+                </div>
+
+                <div class="slider-row">
+                    <label for="side-margin">মার্জিন চাপানো/বাড়ানো:</label>
+                    <input type="range" id="side-margin" min="60" max="500" value="100">
+                    <span class="value-disp" id="side-margin-val">100px</span>
+                </div>
+            </div>
+
+            <!-- 4. Footer Settings -->
+            <div class="control-group">
+                <h3>৪. ফুটার ও কমেন্ট সেটিংস</h3>
+                <label class="checkbox-row">
+                    <input type="checkbox" id="toggle-comment" checked>
+                    "বিস্তারিত কমেন্টে" লেখা প্রদর্শন করুন
+                </label>
+            </div>
+
+            <!-- 5. Ad Banner Management -->
+            <div class="control-group">
+                <h3>৫. বিজ্ঞাপন ব্যানার সেটিংস</h3>
+                <label class="checkbox-row">
+                    <input type="checkbox" id="toggle-ad" checked>
+                    বিজ্ঞাপন ব্যানার চালু রাখুন (চালু থাকলে ১৯২০x১৯২০px, বন্ধে ১৯২০x১৬৪২px)
+                </label>
+                
+                <div id="ad-controls-sub">
+                    <label for="ad-select">বিজ্ঞাপন ব্যানার নির্বাচন করুন:</label>
+                    <select id="ad-select">
+                        <option value="0">বিজ্ঞাপন 01: NCEM (নিউ ক্লাসিক ইভেন্ট ম্যানেজমেন্ট)</option>
+                        <option value="1">বিজ্ঞাপন 02: Mukti Clinic (মুক্তি ক্লিনিক)</option>
+                        <option value="2">বিজ্ঞাপন 03: Rupon (খাদিজা হুমায়রা রূপন)</option>
+                        <option value="3">বিজ্ঞাপন 04: Monir Dental (মনির ডেন্টাল কেয়ার)</option>
+                        <option value="4">বিজ্ঞাপন 05: NCTTA (NCTTA একাডেমি)</option>
+                    </select>
+
+                    <button type="button" id="next-ad-btn" class="btn-action" style="width: 100%; margin-top: 5px;">
+                        পরবর্তী পোস্টে বিজ্ঞাপন পরিবর্তন (Next Cycle ↻)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <button class="btn-download" id="download-btn">ফটোকার্ড ডাউনলোড করুন (HD JPG)</button>
+        </div>
+    </div>
+
+    <script>
+        // Ads Database & Cycling System
+        const adBanners = [
+            { name: "NCEM", url: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/ads-ncem.jpg" },
+            { name: "Mukti Clinic", url: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/mukti-clinic.jpg" },
+            { name: "Rupon", url: "https://www.dnbangla.com.bd/wp-content/uploads/2026/10/ads-khadija-humayra-rupon.jpg" },
+            { name: "Monir Dental", url: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/Monir-Dental.jpg" },
+            { name: "NCTTA", url: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/NCTTA-Academy.jpg" }
+        ];
+
+        let currentAdIndex = 0;
+
+        // Elements
+        const cardWrapper = document.getElementById('card-wrapper');
+        const photocard = document.getElementById('photocard');
+        const previewSizeInfo = document.getElementById('preview-size-info');
+
+        const imgInput = document.getElementById('img-input');
+        const featureImg = document.getElementById('feature-img');
+        const placeholderText = document.getElementById('placeholder-text');
+        
+        const imgZoom = document.getElementById('img-zoom');
+        const imgPanX = document.getElementById('img-pan-x');
+        const imgPanY = document.getElementById('img-pan-y');
+        const zoomVal = document.getElementById('zoom-val');
+        const panXVal = document.getElementById('pan-x-val');
+        const panYVal = document.getElementById('pan-y-val');
+
+        const resetZoomBtn = document.getElementById('reset-zoom');
+        const resetPanXBtn = document.getElementById('reset-pan-x');
+        const resetPanYBtn = document.getElementById('reset-pan-y');
+
+        const datePicker = document.getElementById('date-picker');
+        const todayDateBtn = document.getElementById('today-date-btn');
+        const cardDate = document.getElementById('card-date');
+
+        const headlineInput = document.getElementById('headline-input');
+        const cardHeadline = document.getElementById('card-headline');
+        const fontSizeInput = document.getElementById('font-size');
+        const fontSizeVal = document.getElementById('font-size-val');
+        const sideMarginInput = document.getElementById('side-margin');
+        const sideMarginVal = document.getElementById('side-margin-val');
+
+        const toggleComment = document.getElementById('toggle-comment');
+        const cardFooterLeft = document.getElementById('card-footer-left');
+
+        const toggleAd = document.getElementById('toggle-ad');
+        const adBannerContainer = document.getElementById('ad-banner-container');
+        const adBannerImg = document.getElementById('ad-banner-img');
+        const adSelect = document.getElementById('ad-select');
+        const nextAdBtn = document.getElementById('next-ad-btn');
+        const adControlsSub = document.getElementById('ad-controls-sub');
+
+        const downloadBtn = document.getElementById('download-btn');
+
+        // Responsive Scaling Math for Preview Container
+        function updateScale() {
+            const wrapperWidth = cardWrapper.clientWidth;
+            const scale = wrapperWidth / 1920;
+            photocard.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', updateScale);
+
+        // Update Card Height & Aspect Ratio based on Ad Banner Status
+        function updateCardDimensions() {
+            const isAdActive = toggleAd.checked;
+            if (isAdActive) {
+                photocard.style.height = '1920px';
+                cardWrapper.style.aspectRatio = '1920 / 1920';
+                adBannerContainer.style.display = 'block';
+                adControlsSub.style.display = 'block';
+                previewSizeInfo.textContent = 'লাইভ প্রিভিউ (১৯২০ x ১৯২০ px)';
+            } else {
+                photocard.style.height = '1642px';
+                cardWrapper.style.aspectRatio = '1920 / 1642';
+                adBannerContainer.style.display = 'none';
+                adControlsSub.style.display = 'none';
+                previewSizeInfo.textContent = 'লাইভ প্রিভিউ (১৯২০ x ১৬৪২ px)';
+            }
+            updateScale();
+        }
+
+        toggleAd.addEventListener('change', updateCardDimensions);
+
+        // Ad Banner Cycle Logic
+        function setAdBanner(index) {
+            currentAdIndex = index % adBanners.length;
+            adBannerImg.src = adBanners[currentAdIndex].url;
+            adSelect.value = currentAdIndex;
+        }
+
+        adSelect.addEventListener('change', (e) => {
+            setAdBanner(parseInt(e.target.value));
+        });
+
+        nextAdBtn.addEventListener('click', () => {
+            setAdBanner(currentAdIndex + 1);
+        });
+
+        // Initialize First Ad Banner
+        setAdBanner(0);
+
+        // Digit Converter to Bangla
+        function toBanglaNum(str) {
+            const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return str.replace(/[0-9]/g, digit => banglaDigits[digit]);
+        }
+
+        // Date Formatter
+        function formatBanglaDate(date) {
+            const months = [
+                'জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
+                'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
+            ];
+            const day = toBanglaNum(String(date.getDate()).padStart(2, '0'));
+            const month = months[date.getMonth()];
+            const year = toBanglaNum(String(date.getFullYear()));
+
+            return `${day} ${month} ${year}`;
+        }
+
+        function setAutoDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            
+            datePicker.value = `${year}-${month}-${day}`;
+            cardDate.textContent = formatBanglaDate(today);
+        }
+
+        setAutoDate();
+
+        datePicker.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const parts = e.target.value.split('-');
+                const selectedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                cardDate.textContent = formatBanglaDate(selectedDate);
+            }
+        });
+
+        todayDateBtn.addEventListener('click', setAutoDate);
+
+        // Feature Image Handlers
+        imgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    featureImg.src = event.target.result;
+                    featureImg.style.display = 'block';
+                    placeholderText.style.display = 'none';
+                    resetImageControls();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function updateImageTransform() {
+            const scale = imgZoom.value;
+            const x = imgPanX.value;
+            const y = imgPanY.value;
+            featureImg.style.transform = `scale(${scale}) translate(${x}px, ${y}px)`;
+            zoomVal.textContent = `${scale}x`;
+            panXVal.textContent = `${x}px`;
+            panYVal.textContent = `${y}px`;
+        }
+
+        function resetImageControls() {
+            imgZoom.value = 1;
+            imgPanX.value = 0;
+            imgPanY.value = 0;
+            updateImageTransform();
+        }
+
+        imgZoom.addEventListener('input', updateImageTransform);
+        imgPanX.addEventListener('input', updateImageTransform);
+        imgPanY.addEventListener('input', updateImageTransform);
+
+        resetZoomBtn.addEventListener('click', () => { imgZoom.value = 1; updateImageTransform(); });
+        resetPanXBtn.addEventListener('click', () => { imgPanX.value = 0; updateImageTransform(); });
+        resetPanYBtn.addEventListener('click', () => { imgPanY.value = 0; updateImageTransform(); });
+
+        // Balanced Headline Formatting
+        function splitHeadlineIntoLines(text, maxWidth, fontSize) {
+            const words = text.trim().split(/\s+/).filter(Boolean);
+            if (!words.length) return [];
+
+            const measureCanvas = document.createElement('canvas');
+            const ctx = measureCanvas.getContext('2d');
+            ctx.font = `bold ${fontSize}px 'SolaimanLipi', 'Kalpurush', sans-serif`;
+            const widthOf = value => ctx.measureText(value).width;
+            const maxLines = Math.min(3, words.length);
+
+            for (let lineCount = 1; lineCount <= maxLines; lineCount++) {
+                let bestLines = null;
+                let bestScore = Infinity;
+
+                function findPartitions(start, current) {
+                    if (current.length === lineCount - 1) {
+                        const lastLine = words.slice(start).join(' ');
+                        if (!lastLine) return;
+                        const lastWidth = widthOf(lastLine);
+                        if (lastWidth > maxWidth) return;
+
+                        const widths = [...current.map(widthOf), lastWidth];
+                        const score = Math.max(...widths) - Math.min(...widths);
+                        if (score < bestScore) {
+                            bestScore = score;
+                            bestLines = [...current, lastLine];
+                        }
+                        return;
+                    }
+
+                    const remainingLines = lineCount - current.length - 1;
+                    const lastEnd = words.length - remainingLines;
+                    for (let end = start + 1; end <= lastEnd; end++) {
+                        const candidate = words.slice(start, end).join(' ');
+                        if (widthOf(candidate) > maxWidth) break;
+                        findPartitions(end, [...current, candidate]);
+                    }
+                }
+
+                findPartitions(0, []);
+                if (bestLines) return bestLines;
+            }
+
+            return [text.trim()];
+        }
+
+        function formatHeadline() {
+            const text = headlineInput.value.trim();
+            const fontSize = Number(fontSizeInput.value);
+            const margin = Number(sideMarginInput.value);
+
+            fontSizeVal.textContent = `${fontSize}px`;
+            sideMarginVal.textContent = `${margin}px`;
+            cardHeadline.style.fontSize = `${fontSize}px`;
+
+            const container = document.querySelector('.headline-container');
+            container.style.paddingLeft = `${margin}px`;
+            container.style.paddingRight = `${margin}px`;
+
+            cardHeadline.replaceChildren();
+            if (!text) return;
+
+            const availableWidth = 1920 - (margin * 2);
+            const lines = splitHeadlineIntoLines(text, availableWidth, fontSize);
+            lines.forEach((line, index) => {
+                if (index > 0) cardHeadline.appendChild(document.createElement('br'));
+                cardHeadline.appendChild(document.createTextNode(line));
+            });
+        }
+
+        headlineInput.addEventListener('input', formatHeadline);
+        fontSizeInput.addEventListener('input', formatHeadline);
+        sideMarginInput.addEventListener('input', formatHeadline);
+
+        // Footer Comment Toggle Logic (Hidden/Visible without layout shift)
+        toggleComment.addEventListener('change', (e) => {
+            cardFooterLeft.style.visibility = e.target.checked ? 'visible' : 'hidden';
+        });
+
+        // Download High-Resolution HD JPG
+        downloadBtn.addEventListener('click', () => {
+            downloadBtn.textContent = "ডাউনলোড তৈরি হচ্ছে...";
+            downloadBtn.disabled = true;
+
+            const isAdActive = toggleAd.checked;
+            const exportHeight = isAdActive ? 1920 : 1642;
+
+            const originalTransform = photocard.style.transform;
+            photocard.style.transform = 'none';
+
+            html2canvas(photocard, {
+                width: 1920,
+                height: exportHeight,
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#0B1224'
+            }).then(canvas => {
+                photocard.style.transform = originalTransform;
+                const link = document.createElement('a');
+                link.download = `Insight_Edition_${Date.now()}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.98);
+                link.click();
+
+                downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (HD JPG)";
+                downloadBtn.disabled = false;
+            }).catch(err => {
+                console.error(err);
+                alert('ছবি রূপান্তর করতে সমস্যা হয়েছে!');
+                photocard.style.transform = originalTransform;
+                downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (HD JPG)";
+                downloadBtn.disabled = false;
+            });
+        });
+
+        // Initial Runs
+        updateCardDimensions();
+        formatHeadline();
+    </script>
 </body>
 </html>
