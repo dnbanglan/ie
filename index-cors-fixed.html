@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 20px; background: #1a1e29; color: #fff; font-family: Arial, sans-serif; }
+    h1 { text-align: center; font-size: 22px; }
+    .main { max-width: 1400px; margin: auto; display: flex; gap: 24px; align-items: flex-start; }
+    .preview { width: min(100%, 550px); margin: auto; }
+    #wrapper { width: 100%; aspect-ratio: 1; position: relative; overflow: hidden; background: #0B1224; }
+    #card { position: absolute; top: 0; left: 0; width: 1920px; height: 1920px; transform-origin: top left; overflow: hidden; background: #0B1224; font-family: 'SolaimanLipi', 'Kalpurush', sans-serif; }
+    .feature { position: absolute; inset: 0 0 auto; width: 1920px; height: 1080px; overflow: hidden; background: #1a2236; }
+    #feature-img { width: 100%; height: 100%; display: none; object-fit: cover; }
+    #placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #c9d1d9; font-size: 44px; }
+    #date { position: absolute; top: 88px; right: 0; width: 426px; height: 76px; display: grid; place-items: center; font-size: 38px; font-weight: bold; background: rgba(11,18,36,.4); }
+    .brand-wrap { position: absolute; top: 939px; width: 100%; height: 131px; display: grid; place-items: center; }
+    .brand { background: #0B1224; border: 4px solid white; border-radius: 35px 0 35px 0; padding: 10px 50px; font: 900 52px Arial,sans-serif; letter-spacing: 2px; }
+    .divider { position: absolute; top: 1072px; width: 100%; height: 8px; background: #fff; }
+    #headline { position: absolute; top: 1153px; left: 0; width: 100%; height: 335px; padding: 0 100px; display: grid; place-items: center; overflow: hidden; text-align: center; font-weight: bold; line-height: 1.3; overflow-wrap: anywhere; }
+    .footer { position: absolute; top: 1542px; left: 0; width: 100%; height: 89px; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 0 400px; background: linear-gradient(90deg, transparent, #101f3c 16%, #101f3c 84%, transparent); font-size: 30px; white-space: nowrap; }
+    .spacer { position: absolute; top: 1631px; width: 100%; height: 11px; background: #0B1224; }
+    #ad-area { position: absolute; top: 1642px; width: 1920px; height: 278px; overflow: hidden; background: #0B1224; }
+    #ad-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .controls { flex: 1; display: grid; gap: 12px; }
+    .group { padding: 16px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; }
+    .group h2 { margin: 0 0 12px; color: #58a6ff; font-size: 16px; }
+    label { display: block; margin: 10px 0; color: #c9d1d9; }
+    input, select, textarea, button { width: 100%; margin-top: 6px; padding: 10px; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: white; font: inherit; }
+    input[type=checkbox] { width: auto; }
+    button { cursor: pointer; background: #238636; font-weight: bold; }
+    button:disabled { opacity: .7; cursor: wait; }
+    .hint { color: #9da7b3; font-size: 13px; line-height: 1.5; }
+    @media (max-width: 900px) { .main { flex-direction: column; } .preview { max-width: 100%; } }
+  </style>
+</head>
+<body>
+  <h1>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</h1>
+  <main class="main">
+    <section class="preview">
+      <div id="wrapper"><div id="card">
+        <div class="feature"><div id="placeholder">ফিচার ছবি আপলোড করুন</div><img id="feature-img" alt="ফিচার ছবি"></div>
+        <div id="date"></div>
+        <div class="brand-wrap"><div class="brand">INSIGHT EDITION</div></div>
+        <div class="divider"></div>
+        <div id="headline">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</div>
+        <div class="footer"><span id="comment">বিস্তারিত কমেন্টে</span><span>/InsightEdition</span></div>
+        <div class="spacer"></div>
+        <div id="ad-area"><img id="ad-img" alt="বিজ্ঞাপন ব্যানার"></div>
+      </div></div>
+      <p class="hint" id="size-info" style="text-align:center">লাইভ প্রিভিউ (১৯২০ × ১৯২০ px)</p>
+    </section>
+    <section class="controls">
+      <div class="group"><h2>ফিচার ছবি</h2><label>ছবি আপলোড<input id="image-input" type="file" accept="image/*"></label></div>
+      <div class="group"><h2>তারিখ ও শিরোনাম</h2><label>তারিখ<input id="date-input" type="date"></label><label>শিরোনাম<textarea id="headline-input" rows="3">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</textarea></label><label>ফন্ট সাইজ<input id="font-size" type="range" min="40" max="130" value="72"></label></div>
+      <div class="group"><h2>বিজ্ঞাপন</h2><label><input id="ad-toggle" type="checkbox" checked> ব্যানার দেখান</label><label>ব্যানার বাছাই<select id="ad-select"><option value="0">NCEM</option><option value="1">Mukti Clinic</option><option value="2">Rupon</option><option value="3">Monir Dental</option><option value="4">NCTTA</option></select></label><p class="hint">ব্যানারটি CORS ছাড়াই ডাউনলোড করতে, ad-image.php-কে www.dnbangla.com.bd-এর web root-এ আপলোড করুন. GitHub Pages নিজে PHP চালাতে পারে না.</p></div>
+      <div class="group"><h2>ফুটার</h2><label><input id="comment-toggle" type="checkbox" checked> “বিস্তারিত কমেন্টে” দেখান</label></div>
+      <button id="download" type="button">ফটোকার্ড ডাউনলোড করুন (HD JPG)</button>
+    </section>
+  </main>
+<script>
+  // Deploy ad-image.php at the root of www.dnbangla.com.bd. The endpoint only
+  // serves a fixed allow-list of banner URLs and returns permissive CORS headers.
+  const proxyBase = 'https://www.dnbangla.com.bd/ad-image.php?ad=';
+  const card = document.getElementById('card');
+  const wrapper = document.getElementById('wrapper');
+  const adImage = document.getElementById('ad-img');
+  const adToggle = document.getElementById('ad-toggle');
+  const adSelect = document.getElementById('ad-select');
+  const downloadButton = document.getElementById('download');
+
+  function scalePreview() { card.style.transform = `scale(${wrapper.clientWidth / 1920})`; }
+  window.addEventListener('resize', scalePreview);
+  function updateDimensions() {
+    const withAd = adToggle.checked;
+    card.style.height = withAd ? '1920px' : '1642px';
+    wrapper.style.aspectRatio = withAd ? '1 / 1' : '1920 / 1642';
+    document.getElementById('ad-area').style.display = withAd ? 'block' : 'none';
+    document.getElementById('size-info').textContent = withAd ? 'লাইভ প্রিভিউ (১৯২০ × ১৯২০ px)' : 'লাইভ প্রিভিউ (১৯২০ × ১৬৪২ px)';
+    scalePreview();
+  }
+  function selectAd(index) {
+    const value = Math.max(0, Math.min(4, Number(index) || 0));
+    adSelect.value = String(value);
+    adImage.crossOrigin = 'anonymous';
+    adImage.src = `${proxyBase}${value}`;
+  }
+  adToggle.addEventListener('change', updateDimensions);
+  adSelect.addEventListener('change', () => selectAd(adSelect.value));
+  selectAd(0);
+  updateDimensions();
+
+  const dateInput = document.getElementById('date-input');
+  function setCardDate(value) {
+    const d = value ? new Date(`${value}T00:00:00`) : new Date();
+    const bn = n => String(n).replace(/[0-9]/g, digit => '০১২৩৪৫৬৭৮৯'[Number(digit)]);
+    const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+    document.getElementById('date').textContent = `${bn(String(d.getDate()).padStart(2,'0'))} ${months[d.getMonth()]} ${bn(d.getFullYear())}`;
+  }
+  const now = new Date();
+  dateInput.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  setCardDate(dateInput.value);
+  dateInput.addEventListener('change', () => setCardDate(dateInput.value));
+
+  document.getElementById('image-input').addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      document.getElementById('feature-img').src = reader.result;
+      document.getElementById('feature-img').style.display = 'block';
+      document.getElementById('placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('headline-input').addEventListener('input', e => document.getElementById('headline').textContent = e.target.value);
+  document.getElementById('font-size').addEventListener('input', e => document.getElementById('headline').style.fontSize = `${e.target.value}px`);
+  document.getElementById('comment-toggle').addEventListener('change', e => document.getElementById('comment').style.visibility = e.target.checked ? 'visible' : 'hidden');
+
+  function waitForAd(image) {
+    if (image.complete && image.naturalWidth > 0) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('ব্যানার লোড হতে পারেনি। ad-image.php সার্ভারে ইনস্টল করা আছে কি না পরীক্ষা করুন।')), 20000);
+      image.addEventListener('load', () => { clearTimeout(timer); resolve(); }, { once: true });
+      image.addEventListener('error', () => { clearTimeout(timer); reject(new Error('ব্যানার লোড ব্যর্থ। ad-image.php endpoint পরীক্ষা করুন।')); }, { once: true });
+    });
+  }
+  downloadButton.addEventListener('click', async () => {
+    const originalTransform = card.style.transform;
+    const originalHeight = card.style.height;
+    const height = adToggle.checked ? 1920 : 1642;
+    downloadButton.disabled = true;
+    downloadButton.textContent = 'ডাউনলোড তৈরি হচ্ছে...';
+    try {
+      if (adToggle.checked) await waitForAd(adImage);
+      card.style.transform = 'none';
+      card.style.height = `${height}px`;
+      const canvas = await html2canvas(card, { width: 1920, height, scale: 1, useCORS: true, allowTaint: false, backgroundColor: '#0B1224' });
+      const link = document.createElement('a');
+      link.download = `Insight_Edition_${Date.now()}.jpg`;
+      link.href = canvas.toDataURL('image/jpeg', 0.98);
+      link.click();
+    } catch (error) {
+      console.error(error);
+      alert(`${error.message}\nপ্রয়োজনে ad-image.php-কে www.dnbangla.com.bd-এর web root-এ আপলোড করুন।`);
+    } finally {
+      card.style.height = originalHeight;
+      card.style.transform = originalTransform;
+      scalePreview();
+      downloadButton.disabled = false;
+      downloadButton.textContent = 'ফটোকার্ড ডাউনলোড করুন (HD JPG)';
+    }
+  });
+</script>
+</body>
+</html>
