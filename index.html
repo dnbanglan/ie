@@ -234,24 +234,25 @@
             z-index: 4;
         }
 
-        .ad-banner-container {
-            position: absolute;
-            top: 1642px;
-            left: 0;
-            width: 1920px;
-            height: 278px;
-            overflow: hidden;
-            background: #000;
-            z-index: 10;
-        }
+    .ad-banner-container {
+        position: absolute;
+        top: 1642px;
+        left: 0;
+        width: 1920px;
+        height: 278px;
+        overflow: hidden;
+        background-color: #000000;
+        z-index: 10;
+        display: block;
+    }
 
-        #ad-banner-img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background: #000;
-        }
+    #ad-banner-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        background-color: #000000;
+    }
 
         .controls-panel {
             flex: 1;
@@ -632,8 +633,24 @@
 
         toggleAd.addEventListener("change", updateCardDimensions);
 
-        function setAdBanner(index) {
-            currentAdIndex = ((index % adBanners.length) + adBanners.length) % adBanners.length;
+function setAdBanner(index) {
+    currentAdIndex = index % adBanners.length;
+    adBannerImg.src = adBanners[currentAdIndex].url;
+    adBannerImg.style.display = 'none';
+    adSelect.value = currentAdIndex;
+
+    adBannerImg.onload = () => {
+        adBannerImg.style.display = 'block';
+    };
+
+    adBannerImg.onerror = () => {
+        adBannerImg.style.display = 'block';
+        adBannerImg.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="278">
+                <rect width="100%" height="100%" fill="#000000"/>
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                      fill="#ffffff" font-size="48" font-family="Arial">Ad Banner</text>
+            
 
             // crossOrigin must be set before src; the image host must permit CORS.
             adBannerImg.crossOrigin = "anonymous";
@@ -802,56 +819,45 @@
             });
         }
 
-        downloadBtn.addEventListener("click", async () => {
-            if (downloadBtn.disabled) return;
+downloadBtn.addEventListener('click', () => {
+    const isAdActive = toggleAd.checked;
+    const exportHeight = isAdActive ? 1920 : 1642;
 
-            const hasAd = toggleAd.checked;
-            const exportHeight = hasAd ? 1920 : 1642;
-            const previousTransform = photocard.style.transform;
+    if (isAdActive && !adBannerImg.complete) {
+        alert('ব্যানার ইমেজ লোড হচ্ছে, একটু অপেক্ষা করুন তারপর ডাউনলোড করুন।');
+        return;
+    }
 
-            downloadBtn.disabled = true;
-            downloadBtn.textContent = hasAd ? "বিজ্ঞাপন লোড হচ্ছে..." : "ডাউনলোড তৈরি হচ্ছে...";
+    downloadBtn.textContent = "ডাউনলোড তৈরি হচ্ছে...";
+    downloadBtn.disabled = true;
 
-            try {
-                if (hasAd) {
-                    await waitForImage(adBannerImg);
+    const originalTransform = photocard.style.transform;
+    photocard.style.transform = 'none';
 
-                    if (adBannerImg.naturalWidth === 0) {
-                        throw new Error("বিজ্ঞাপন ব্যানার লোড করা যায়নি");
-                    }
-                }
+    html2canvas(photocard, {
+        width: 1920,
+        height: exportHeight,
+        scale: 1,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#0B1224'
+    }).then(canvas => {
+        photocard.style.transform = originalTransform;
+        const link = document.createElement('a');
+        link.download = `Insight_Edition_${Date.now()}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 0.98);
+        link.click();
 
-                downloadBtn.textContent = "ডাউনলোড তৈরি হচ্ছে...";
-                photocard.style.transform = "none";
-
-                const canvas = await html2canvas(photocard, {
-                    width: 1920,
-                    height: exportHeight,
-                    scale: 1,
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: "#0b1224",
-                    logging: false
-                });
-
-                const link = document.createElement("a");
-                link.download = `Insight_Edition_${Date.now()}.jpg`;
-                link.href = canvas.toDataURL("image/jpeg", 0.98);
-                link.click();
-            } catch (error) {
-                console.error("ফটোকার্ড তৈরি করতে সমস্যা:", error);
-
-                alert(
-                    "ফটোকার্ড তৈরি করা যায়নি। বিজ্ঞাপন ছবিটি লোড হচ্ছে কি না পরীক্ষা করুন। " +
-                    "সমস্যা থাকলে ছবির সার্ভারে CORS অনুমতি চালু করতে হবে।"
-                );
-            } finally {
-                photocard.style.transform = previousTransform;
-                updateScale();
-                downloadBtn.textContent = originalDownloadText;
-                downloadBtn.disabled = false;
-            }
-        });
+        downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (HD JPG)";
+        downloadBtn.disabled = false;
+    }).catch(err => {
+        console.error(err);
+        alert('ছবি রূপান্তর করতে সমস্যা হয়েছে!');
+        photocard.style.transform = originalTransform;
+        downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (HD JPG)";
+        downloadBtn.disabled = false;
+    });
+});
 
         setAdBanner(0);
         setAutoDate();
