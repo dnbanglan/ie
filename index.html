@@ -5,481 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ইনসাইট এডিশন ফটোকার্ড জেনারেটর - INSIGHT EDITION</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'SolaimanLipi', 'Kalpurush';
-            background-color: #1a1e29;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #1a1e29; color: #ffffff; display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; padding: 20px;
         }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 22px;
-            color: #e2e8f0;
-            text-align: center;
-        }
-
+        h1 { margin-bottom: 20px; font-size: 22px; color: #e2e8f0; text-align: center; }
         .main-container {
-            display: flex;
-            flex-direction: row;
-            gap: 25px;
-            background-color: #0d1117;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            max-width: 1400px;
-            width: 100%;
+            display: flex; flex-direction: row; gap: 25px; background-color: #0d1117; padding: 20px;
+            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-width: 1400px; width: 100%;
         }
-
-        .preview-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 550px;
-            margin: 0 auto;
-        }
-
+        .preview-area { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 550px; margin: 0 auto; }
         .card-wrapper {
-            width: 100%;
-            /* Dynamic aspect ratio controlled by JS */
-            aspect-ratio: 1920 / 1920; 
-            position: relative;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #0B1224;
-            transition: aspect-ratio 0.2s ease;
+            width: 100%; aspect-ratio: 1920 / 1920; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+            border-radius: 6px; overflow: hidden; background-color: #0B1224; transition: aspect-ratio 0.2s ease;
         }
 
-        /* Fixed 1920px Canvas */
         #photocard {
-            width: 1920px;
-            height: 1920px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform-origin: top left;
-            background-color: #0B1224;
-            overflow: hidden;
-            font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
+            width: 1920px; height: 1920px; position: absolute; top: 0; left: 0; transform-origin: top left;
+            background-color: #0B1224; overflow: hidden; font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
         }
 
-        /* 1. Feature Image (0px to 1080px) */
         .feature-image-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1920px;
-            height: 1080px;
-            overflow: hidden;
-            background-color: #1a2236;
+            position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; overflow: hidden; background-color: #1a2236;
         }
-
-        #feature-img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform-origin: center center;
-        }
-
+        #feature-img { position: absolute; width: 100%; height: 100%; object-fit: cover; transform-origin: center center; }
         .img-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #8b949e;
-            font-size: 45px;
-            border: 2px dashed #30363d;
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            color: #8b949e; font-size: 45px; border: 2px dashed #30363d;
         }
 
-        /* 2. Date Box (Top 88px to 160px -> Height 76px, Width 426px, Left 1495.857px) */
         .date-box {
-            position: absolute;
-            top: 88px;
-            left: 1495.857px;
-            width: 426px;
-            height: 76px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-size: 38px;
-            font-weight: bold;
-            z-index: 10;
-            background-color: rgba(11, 18, 36, 0.3); /* 0B1224 with 30% opacity */
-            box-sizing: border-box;
+            position: absolute; top: 88px; left: 1495.857px; width: 426px; height: 76px; display: flex;
+            align-items: center; justify-content: center; color: #ffffff; font-size: 38px; font-weight: bold;
+            z-index: 10; background-color: rgba(11, 18, 36, 0.3); box-sizing: border-box;
         }
 
-        /* 3. Branding Label (Top 939px to 1070px -> Height 131px) */
         .branding-container {
-            position: absolute;
-            top: 939px;
-            left: 0;
-            width: 1920px;
-            height: 131px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 12;
-            pointer-events: none;
+            position: absolute; top: 939px; left: 0; width: 1920px; height: 131px; display: flex;
+            align-items: center; justify-content: center; z-index: 12; pointer-events: none;
         }
-
         .branding-label {
-            background-color: #0B1224;
-            color: #ffffff;
-            font-size: 52px;
-            font-weight: 900;
-            padding: 10px 50px;
-            letter-spacing: 2px;
-            border: 4px solid #ffffff;
-            /* Top-left round, Top-right sharp, Bottom-right round, Bottom-left sharp */
-            border-top-left-radius: 35px;
-            border-top-right-radius: 0px;
-            border-bottom-right-radius: 35px;
-            border-bottom-left-radius: 0px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            background-color: #0B1224; color: #ffffff; font-size: 52px; font-weight: 900; padding: 10px 50px;
+            letter-spacing: 2px; border: 4px solid #ffffff; border-top-left-radius: 35px; border-top-right-radius: 0px;
+            border-bottom-right-radius: 35px; border-bottom-left-radius: 0px; text-transform: uppercase;
+            white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* 4. White Line (Top 1072px to 1080px -> Height 8px) */
         .divider-line {
-            position: absolute;
-            top: 1072px;
-            left: 0;
-            width: 1920px;
-            height: 8px;
-            background-color: #ffffff;
-            z-index: 11;
+            position: absolute; top: 1072px; left: 0; width: 1920px; height: 8px; background-color: #ffffff; z-index: 11;
         }
 
-        /* 5. Headline Container (Top 1153px to 1488px -> Height 335px) */
         .headline-container {
-            position: absolute;
-            top: 1153px;
-            left: 0;
-            width: 1920px;
-            height: 335px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 100px;
-            box-sizing: border-box;
-            z-index: 5;
-            overflow: hidden; /* Ensures text never spills outside 335px height */
+            position: absolute; top: 1153px; left: 0; width: 1920px; height: 335px; display: flex;
+            align-items: center; justify-content: center; padding: 0 100px; box-sizing: border-box; z-index: 5; overflow: hidden;
         }
-
         .headline-text {
-            color: #ffffff;
-            font-size: 72px;
-            font-weight: bold;
-            text-align: center;
-            line-height: 1.3;
-            width: 100%;
-            word-wrap: break-word;
-            transition: font-size 0.1s, padding 0.1s;
+            color: #ffffff; font-size: 72px; font-weight: bold; text-align: center; line-height: 1.3; width: 100%;
+            word-wrap: break-word; transition: font-size 0.1s, padding 0.1s;
         }
 
-        /* 6. Footer Bar (Top 1542px to 1631px -> Height 89px) */
         .footer-bar {
-            position: absolute;
-            top: 1542px;
-            left: 0;
-            width: 1920px;
-            height: 89px;
-            z-index: 5;
-            /* 0B1224 gradient background (300px opacity fade on left and right) */
-            background: linear-gradient(
-                90deg, 
-                rgba(16, 31, 60, 0) 0px, 
-                rgba(16, 31, 60, 1) 300px, 
-                rgba(16, 31, 60, 1) 1620px, 
-                rgba(16, 31, 60, 0) 1920px
-            );
+            position: absolute; top: 1542px; left: 0; width: 1920px; height: 89px; z-index: 5;
+            background: linear-gradient(90deg, rgba(16,31,60,0) 0px, rgba(16,31,60,1) 300px, rgba(16,31,60,1) 1620px, rgba(16,31,60,0) 1920px);
         }
+        .footer-left { position: absolute; left: 400px; top: 50%; transform: translateY(-50%); color: #ffffff; font-size: 30px; font-weight: 500; white-space: nowrap; }
+        .footer-right { position: absolute; right: 400px; top: 50%; transform: translateY(-50%); color: #ffffff; font-size: 30px; font-weight: 500; display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+        .fb-icon { width: 36px; height: 36px; fill: #ffffff; }
 
-        .footer-left {
-            position: absolute;
-            left: 400px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ffffff;
-            font-size: 30px;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .footer-right {
-            position: absolute;
-            right: 400px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ffffff;
-            font-size: 30px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            white-space: nowrap;
-        }
-
-        .fb-icon {
-            width: 36px;
-            height: 36px;
-            fill: #ffffff;
-        }
-
-        /* 7. Background Color Area (Top 1631px to 1642px) */
         .bottom-bg-spacer {
-            position: absolute;
-            top: 1631px;
-            left: 0;
-            width: 1920px;
-            height: 11px;
-            background-color: #0B1224;
-            z-index: 4;
+            position: absolute; top: 1631px; left: 0; width: 1920px; height: 11px; background-color: #0B1224; z-index: 4;
         }
 
-        /* 8. Ad Banner Area (Top 1642px to 1920px -> Height 278px) */
         .ad-banner-container {
-            position: absolute;
-            top: 1642px;
-            left: 0;
-            width: 1920px;
-            height: 278px;
-            overflow: hidden;
-            background-color: #000;
-            z-index: 10;
+            position: absolute; top: 1642px; left: 0; width: 1920px; height: 278px; overflow: hidden; background-color: #000; z-index: 10;
         }
+        #ad-banner-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        #ad-banner-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Controls Panel */
-        .controls-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .control-group {
-            background-color: #161b22;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
-        }
-
-        .control-group h3 {
-            font-size: 15px;
-            margin-bottom: 12px;
-            color: #58a6ff;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 5px;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 6px;
-            color: #c9d1d9;
-        }
-
+        .controls-panel { flex: 1; display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .control-group { background-color: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d; }
+        .control-group h3 { font-size: 15px; margin-bottom: 12px; color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        label { display: block; font-size: 14px; margin-bottom: 6px; color: #c9d1d9; }
         input[type="text"], select, textarea, input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            color: #ffffff;
-            font-size: 14px;
-            margin-bottom: 10px;
-            font-family: inherit;
+            width: 100%; padding: 10px; background-color: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #ffffff; font-size: 14px; margin-bottom: 10px; font-family: inherit;
         }
-
-        textarea {
-            resize: vertical;
-            height: 75px;
-        }
-
-        .slider-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .slider-row label {
-            width: 120px;
-            margin-bottom: 0;
-            font-size: 13px;
-        }
-
-        input[type="range"] {
-            flex: 1;
-            accent-color: #58a6ff;
-        }
-
-        .value-disp {
-            width: 50px;
-            text-align: right;
-            font-size: 12px;
-            color: #8b949e;
-        }
-
+        textarea { resize: vertical; height: 75px; }
+        .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .slider-row label { width: 120px; margin-bottom: 0; font-size: 13px; }
+        input[type="range"] { flex: 1; accent-color: #58a6ff; }
+        .value-disp { width: 50px; text-align: right; font-size: 12px; color: #8b949e; }
         .btn-reset, .btn-action {
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
+            background-color: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 6px 12px;
+            border-radius: 4px; font-size: 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
         }
-
-        .btn-reset:hover, .btn-action:hover {
-            background-color: #30363d;
-            border-color: #8b949e;
-        }
-
-        .btn-reset-danger {
-            color: #f85149;
-        }
-
-        .btn-reset-danger:hover {
-            border-color: #f85149;
-        }
+        .btn-reset:hover, .btn-action:hover { background-color: #30363d; border-color: #8b949e; }
+        .btn-reset-danger { color: #f85149; }
+        .btn-reset-danger:hover { border-color: #f85149; }
 
         .checkbox-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            user-select: none;
-            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; user-select: none; margin-bottom: 10px;
         }
 
         .btn-download {
-            background-color: #238636;
-            color: #ffffff;
-            border: none;
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 10px;
-            width: 100%;
+            background-color: #238636; color: #ffffff; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;
+            transition: background-color 0.2s; margin-top: 10px; width: 100%;
         }
-
-        .btn-download:hover {
-            background-color: #2ea043;
-        }
+        .btn-download:hover { background-color: #2ea043; }
 
         .file-upload-btn {
-            display: inline-block;
-            padding: 10px 16px;
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 10px;
-            text-align: center;
-            width: 100%;
+            display: inline-block; padding: 10px 16px; background-color: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; cursor: pointer; font-size: 14px; margin-bottom: 10px; text-align: center; width: 100%;
         }
-
-        .file-upload-btn:hover {
-            background-color: #30363d;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
+        .file-upload-btn:hover { background-color: #30363d; }
+        input[type="file"] { display: none; }
         @media (max-width: 900px) {
-            .main-container {
-                flex-direction: column;
-                align-items: center;
-                padding: 15px;
-            }
-
-            .preview-area {
-                max-width: 100%;
-            }
+            .main-container { flex-direction: column; align-items: center; padding: 15px; }
+            .preview-area { max-width: 100%; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-
     <h1>ইনসাইট এডিশন ফটোকার্ড জেনারেটর</h1>
 
     <div class="main-container">
-        <!-- Preview Panel -->
         <div class="preview-area">
             <div class="card-wrapper" id="card-wrapper">
                 <div id="photocard">
-                    <!-- 1. Feature Image Zone (0-1080px) -->
                     <div class="feature-image-container">
                         <div id="placeholder-text" class="img-placeholder">ফিচার ছবি আপলোড করুন</div>
                         <img id="feature-img" src="" alt="Feature Image" style="display: none;">
                     </div>
 
-                    <!-- 2. Date Box (Top 88px, Left 1495.857px) -->
                     <div class="date-box" id="card-date">০৪ নভেম্বর ২০২৬</div>
 
-                    <!-- 3. Branding Label (Top 939px to 1070px) -->
                     <div class="branding-container">
                         <div class="branding-label">INSIGHT EDITION</div>
                     </div>
 
-                    <!-- 4. White Divider Line (Top 1072px) -->
                     <div class="divider-line"></div>
 
-                    <!-- 5. Headline Container (Top 1153px to 1488px) -->
                     <div class="headline-container">
                         <div class="headline-text" id="card-headline">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</div>
                     </div>
 
-                    <!-- 6. Footer Bar (Top 1542px to 1631px) -->
                     <div class="footer-bar">
                         <div class="footer-left" id="card-footer-left">বিস্তারিত কমেন্টে</div>
                         <div class="footer-right">
                             <svg class="fb-icon" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686 0.681 3.5 1.756l-1.245 1.078c-0.594-0.789-1.58-1.147-2.494-1.147-1.94 0-2.759 1.356-2.759 2.718v1.907h4.088l-0.526 3.47H9.705v8.385C14.455 23.027 24 18.063 24 12.073z"></path>
                             </svg>
                             <span id="card-social-handle">/InsightEdition</span>
                         </div>
                     </div>
 
-                    <!-- 7. Spacer Background (Top 1631px to 1642px) -->
                     <div class="bottom-bg-spacer"></div>
 
-                    <!-- 8. Ad Banner Container (Top 1642px to 1920px) -->
                     <div class="ad-banner-container" id="ad-banner-container">
                         <img id="ad-banner-img" src="" alt="Ad Banner">
                     </div>
@@ -488,16 +169,14 @@
             <p style="margin-top: 10px; font-size: 13px; color: #8b949e; text-align: center;" id="preview-size-info">লাইভ প্রিভিউ (১৯২০ x ১৯২০ px)</p>
         </div>
 
-        <!-- Controls Panel -->
         <div class="controls-panel">
-            <!-- 1. Feature Image Control -->
             <div class="control-group">
                 <h3>১. ফিচার ছবি আপলোড ও পজিশনিং (১০৮০px চড়া)</h3>
                 <label class="file-upload-btn">
                     ছবি আপলোড করুন
                     <input type="file" id="img-input" accept="image/*">
                 </label>
-                
+
                 <div class="slider-row">
                     <label for="img-zoom">জুম (Zoom):</label>
                     <input type="range" id="img-zoom" min="1" max="3" step="0.05" value="1">
@@ -518,7 +197,6 @@
                 </div>
             </div>
 
-            <!-- 2. Date Control -->
             <div class="control-group">
                 <h3>২. তারিখ নির্ধারণ (মেন্যুয়াল / অটো)</h3>
                 <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px;">
@@ -527,11 +205,10 @@
                 </div>
             </div>
 
-            <!-- 3. Headline Control -->
             <div class="control-group">
                 <h3>৩. সংবাদ শিরোনাম (Headline)</h3>
                 <label for="headline-input">শিরোনাম লিখুন:</label>
-                <textarea id="headline-input" rows="3" placeholder="সংবাদের শিরোনাম লিখুন...">এখানে আপনার সংবাদের বিস্তারিত শিরোনাম লিখুন</textarea>
+                <textarea id="headline-input" rows="3" placeholder="সংবাদের শিরোনাম লিখুন...">এখানে আপনার সংবাদের বিস্তৃত শিরোনাম লিখুন</textarea>
 
                 <div class="slider-row">
                     <label for="font-size">টেক্সট সাইজ:</label>
@@ -546,7 +223,6 @@
                 </div>
             </div>
 
-            <!-- 4. Footer Settings -->
             <div class="control-group">
                 <h3>৪. ফুটার ও কমেন্ট সেটিংস</h3>
                 <label class="checkbox-row">
@@ -555,22 +231,21 @@
                 </label>
             </div>
 
-            <!-- 5. Ad Banner Management -->
             <div class="control-group">
                 <h3>৫. বিজ্ঞাপন ব্যানার সেটিংস</h3>
                 <label class="checkbox-row">
                     <input type="checkbox" id="toggle-ad" checked>
                     বিজ্ঞাপন ব্যানার চালু রাখুন (চালু থাকলে ১৯২০x১৯২০px, বন্ধে ১৯২০x১৬৪২px)
                 </label>
-                
+
                 <div id="ad-controls-sub">
                     <label for="ad-select">বিজ্ঞাপন ব্যানার নির্বাচন করুন:</label>
                     <select id="ad-select">
-                        <option value="0">বিজ্ঞাপন 01: NCEM (নিউ ক্লাসিক ইভেন্ট ম্যানেজমেন্ট)</option>
-                        <option value="1">বিজ্ঞাপন 02: Mukti Clinic (মুক্তি ক্লিনিক)</option>
-                        <option value="2">বিজ্ঞাপন 03: Rupon (খাদিজা হুমায়রা রূপন)</option>
-                        <option value="3">বিজ্ঞাপন 04: Monir Dental (মনির ডেন্টাল কেয়ার)</option>
-                        <option value="4">বিজ্ঞাপন 05: NCTTA (NCTTA একাডেমি)</option>
+                        <option value="0">বিজ্ঞাপন 01: NCEM</option>
+                        <option value="1">বিজ্ঞাপন 02: Mukti Clinic</option>
+                        <option value="2">বিজ্ঞাপন 03: Rupon</option>
+                        <option value="3">বিজ্ঞাপন 04: Monir Dental</option>
+                        <option value="4">বিজ্ঞাপন 05: NCTTA</option>
                     </select>
 
                     <button type="button" id="next-ad-btn" class="btn-action" style="width: 100%; margin-top: 5px;">
@@ -579,13 +254,11 @@
                 </div>
             </div>
 
-            <!-- Download Button -->
             <button class="btn-download" id="download-btn">ফটোকার্ড ডাউনলোড করুন (HD JPG)</button>
         </div>
     </div>
 
     <script>
-        // Ads Database & Cycling System
         const adBanners = [
             { name: "NCEM", url: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/ads-ncem.jpg" },
             { name: "Mukti Clinic", url: "https://www.dnbangla.com.bd/wp-content/uploads/2026/03/mukti-clinic.jpg" },
@@ -596,7 +269,6 @@
 
         let currentAdIndex = 0;
 
-        // Elements
         const cardWrapper = document.getElementById('card-wrapper');
         const photocard = document.getElementById('photocard');
         const previewSizeInfo = document.getElementById('preview-size-info');
@@ -604,7 +276,7 @@
         const imgInput = document.getElementById('img-input');
         const featureImg = document.getElementById('feature-img');
         const placeholderText = document.getElementById('placeholder-text');
-        
+
         const imgZoom = document.getElementById('img-zoom');
         const imgPanX = document.getElementById('img-pan-x');
         const imgPanY = document.getElementById('img-pan-y');
@@ -639,7 +311,6 @@
 
         const downloadBtn = document.getElementById('download-btn');
 
-        // Responsive Scaling Math for Preview Container
         function updateScale() {
             const wrapperWidth = cardWrapper.clientWidth;
             const scale = wrapperWidth / 1920;
@@ -648,7 +319,6 @@
 
         window.addEventListener('resize', updateScale);
 
-        // Update Card Height & Aspect Ratio based on Ad Banner Status
         function updateCardDimensions() {
             const isAdActive = toggleAd.checked;
             if (isAdActive) {
@@ -669,9 +339,9 @@
 
         toggleAd.addEventListener('change', updateCardDimensions);
 
-        // Ad Banner Cycle Logic
         function setAdBanner(index) {
-            currentAdIndex = index % adBanners.length;
+            currentAdIndex = ((index % adBanners.length) + adBanners.length) % adBanners.length;
+            adBannerImg.crossOrigin = 'anonymous';
             adBannerImg.src = adBanners[currentAdIndex].url;
             adSelect.value = currentAdIndex;
         }
@@ -684,16 +354,13 @@
             setAdBanner(currentAdIndex + 1);
         });
 
-        // Initialize First Ad Banner
         setAdBanner(0);
 
-        // Digit Converter to Bangla
         function toBanglaNum(str) {
             const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
             return str.replace(/[0-9]/g, digit => banglaDigits[digit]);
         }
 
-        // Date Formatter
         function formatBanglaDate(date) {
             const months = [
                 'জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
@@ -702,7 +369,6 @@
             const day = toBanglaNum(String(date.getDate()).padStart(2, '0'));
             const month = months[date.getMonth()];
             const year = toBanglaNum(String(date.getFullYear()));
-
             return `${day} ${month} ${year}`;
         }
 
@@ -711,7 +377,7 @@
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
-            
+
             datePicker.value = `${year}-${month}-${day}`;
             cardDate.textContent = formatBanglaDate(today);
         }
@@ -728,7 +394,6 @@
 
         todayDateBtn.addEventListener('click', setAutoDate);
 
-        // Feature Image Handlers
         imgInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -768,7 +433,6 @@
         resetPanXBtn.addEventListener('click', () => { imgPanX.value = 0; updateImageTransform(); });
         resetPanYBtn.addEventListener('click', () => { imgPanY.value = 0; updateImageTransform(); });
 
-        // Balanced Headline Formatting
         function splitHeadlineIntoLines(text, maxWidth, fontSize) {
             const words = text.trim().split(/\s+/).filter(Boolean);
             if (!words.length) return [];
@@ -843,48 +507,80 @@
         fontSizeInput.addEventListener('input', formatHeadline);
         sideMarginInput.addEventListener('input', formatHeadline);
 
-        // Footer Comment Toggle Logic (Hidden/Visible without layout shift)
         toggleComment.addEventListener('change', (e) => {
             cardFooterLeft.style.visibility = e.target.checked ? 'visible' : 'hidden';
         });
 
-        // Download High-Resolution HD JPG
-        downloadBtn.addEventListener('click', () => {
+        function waitForAdImage(image) {
+            return new Promise((resolve, reject) => {
+                if (image.complete && image.naturalWidth > 0) {
+                    resolve();
+                    return;
+                }
+
+                const timeout = setTimeout(() => {
+                    reject(new Error('বিজ্ঞাপন ব্যানার লোড হয়নি। সার্ভার/ইন্টারনেট চেক করুন।'));
+                }, 20000);
+
+                image.addEventListener('load', () => {
+                    clearTimeout(timeout);
+                    resolve();
+                }, { once: true });
+
+                image.addEventListener('error', () => {
+                    clearTimeout(timeout);
+                    reject(new Error('বিজ্ঞাপন ব্যানার লোড করা যায়নি। CORS/URL সমস্যা হতে পারে।'));
+                }, { once: true });
+            });
+        }
+
+        downloadBtn.addEventListener('click', async () => {
             downloadBtn.textContent = "ডাউনলোড তৈরি হচ্ছে...";
             downloadBtn.disabled = true;
 
             const isAdActive = toggleAd.checked;
             const exportHeight = isAdActive ? 1920 : 1642;
 
-            const originalTransform = photocard.style.transform;
-            photocard.style.transform = 'none';
+            try {
+                if (isAdActive) {
+                    await waitForAdImage(adBannerImg);
+                }
 
-            html2canvas(photocard, {
-                width: 1920,
-                height: exportHeight,
-                scale: 1,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#0B1224'
-            }).then(canvas => {
+                const originalTransform = photocard.style.transform;
+                const originalHeight = photocard.style.height;
+
+                photocard.style.transform = 'none';
+                photocard.style.height = `${exportHeight}px`;
+
+                const canvas = await html2canvas(photocard, {
+                    width: 1920,
+                    height: exportHeight,
+                    scale: 1,
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: '#0B1224'
+                });
+
                 photocard.style.transform = originalTransform;
+                photocard.style.height = originalHeight;
+
                 const link = document.createElement('a');
                 link.download = `Insight_Edition_${Date.now()}.jpg`;
                 link.href = canvas.toDataURL('image/jpeg', 0.98);
                 link.click();
 
-                downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (HD JPG)";
-                downloadBtn.disabled = false;
-            }).catch(err => {
+            } catch (err) {
                 console.error(err);
-                alert('ছবি রূপান্তর করতে সমস্যা হয়েছে!');
-                photocard.style.transform = originalTransform;
+                alert(
+                    'ফটোকার্ড ডাউনলোড হয়নি। ব্যানারের সার্ভারে CORS অনুমতি নেই। ' +
+                    'এজন্য ছবির URL একই ডোমেইন/সার্ভারে রাখুন অথবা CORS চালু করুন।'
+                );
+            } finally {
                 downloadBtn.textContent = "ফটোকার্ড ডাউনলোড করুন (HD JPG)";
                 downloadBtn.disabled = false;
-            });
+            }
         });
 
-        // Initial Runs
         updateCardDimensions();
         formatHeadline();
     </script>
